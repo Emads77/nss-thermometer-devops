@@ -1,0 +1,2 @@
+# DevOps exam: NSS Thermometer
+Please read the assignment in `assignment-nl.md` or `assignment-en.md`. See `README.md` files in `backend`, `frontend` and `seed-application` folders for additional information.

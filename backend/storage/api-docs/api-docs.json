@@ -1,0 +1,272 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "NSE Thermometer API",
+        "description": "These are all the routings for the application.",
+        "contact": {
+            "email": "e.f.duipmans@saxion.nl"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/goals": {
+            "get": {
+                "tags": [
+                    "Goals"
+                ],
+                "summary": "Fetch all goals",
+                "operationId": "5adde0ace800e3beef2e6ad9d75e014f",
+                "responses": {
+                    "200": {
+                        "description": "Successfully fetched goals",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Goal"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Goals"
+                ],
+                "summary": "Create a new goal",
+                "description": "This endpoint allows you to create a new goal. The goal's name and target percentage must be unique.",
+                "operationId": "29496ed2e34c63a6bd6e4952bf020019",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "description": "The name of the goal",
+                                        "type": "string",
+                                        "example": "Docenten bakken taart voor studenten."
+                                    },
+                                    "targetPercentage": {
+                                        "description": "The target percentage for the goal (0 to 100)",
+                                        "type": "integer",
+                                        "example": 55
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successfully created the goal",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "description": "The ID of the newly created goal",
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "name": {
+                                            "description": "The name of the goal",
+                                            "type": "string",
+                                            "example": "Docenten bakken taart voor studenten."
+                                        },
+                                        "targetPercentage": {
+                                            "description": "The target percentage for the goal",
+                                            "type": "integer",
+                                            "example": 55
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error. The name and target percentage must be unique.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The name and targetPercentage must be unique."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity. Validation errors occurred.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The name has already been taken."
+                                        },
+                                        "errors": {
+                                            "type": "object",
+                                            "additionalProperties": [
+                                                {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The name has already been taken."
+                                                    },
+                                                    "property": "name"
+                                                },
+                                                {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The target percentage must be unique."
+                                                    },
+                                                    "property": "targetPercentage"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/goals/{id}": {
+            "delete": {
+                "tags": [
+                    "Goals"
+                ],
+                "summary": "Delete a goal by ID",
+                "operationId": "19ec93ed60d752865b8318abd0d70ffa",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully deleted the goal",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Goal deleted successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Goal not found"
+                    }
+                }
+            }
+        },
+        "/api/percentage": {
+            "get": {
+                "tags": [
+                    "Percentage"
+                ],
+                "summary": "Get the current percentage",
+                "operationId": "791f764c3c9fe9b248df397ec59b7b89",
+                "responses": {
+                    "200": {
+                        "description": "Successfully fetched percentage",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "percentage": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/percentage/{percentage}": {
+            "post": {
+                "tags": [
+                    "Percentage"
+                ],
+                "summary": "Update the percentage",
+                "operationId": "beb6750c6b5d9eb69d955f2b33f2a942",
+                "parameters": [
+                    {
+                        "name": "percentage",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 50
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully updated percentage"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Goal": {
+                "required": [
+                    "name",
+                    "targetPercentage"
+                ],
+                "properties": {
+                    "name": {
+                        "description": "The name of the goal",
+                        "type": "string"
+                    },
+                    "targetPercentage": {
+                        "description": "The target percentage of the goal",
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Goals",
+            "description": "Goals"
+        },
+        {
+            "name": "Percentage",
+            "description": "Percentage"
+        }
+    ]
+}

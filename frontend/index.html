@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NSS Promotion</title>
+  </head>
+  <body>
+    <div class="screen-container">
+
+      <!-- Error screen -->
+      <div id="error-screen" class="bg-gradient-to-t from-rose-800 to-rose-600">
+        <h1 class="m-0 p-0 text-white text-7xl">Error</h1>
+        <h1 class="m-0 mt-20 p-0 text-white text-9xl">Data from API could not be loaded.</h1>
+      </div>
+      
+      <!-- Call to action screen -->
+      <div id="call-to-action-screen" class="screen bg-gradient-to-t from-teal-700 to-teal-600">
+        <h1 class="m-0 p-0 text-white text-7xl">Give your opinion about our course program</h1>
+        <h1 class="m-0 mt-20 p-0 text-white text-9xl">Fill out the NSS!</h1>
+      </div>
+
+      <!-- Percentage bar screen -->
+      <div id="percentage-bar-screen" class="screen bg-gradient-to-tr from-indigo-950 to-indigo-600">
+        <h1 class="m-0 mb-14 p-0 text-white text-7xl">Current response from our course program...</h1>
+        <div class="percentage-bar-container">
+          <div class="percentage-bar" id="percentage-bar">
+            <span class="percentage-text">0%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Goal screen -->
+      <div id="goal-screen" class="screen bg-gradient-to-tr from-sky-800 to-sky-500">
+        <h1 class="m-0 mb-5 p-0 text-white text-7xl">With <span class="percentage text-lime-500">0%</span> you have unlocked...</h1>
+        <div class="goals-list flex flex-wrap gap-5 mt-5 w-11/12"></div>
+      </div>
+    </div>
+    
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
