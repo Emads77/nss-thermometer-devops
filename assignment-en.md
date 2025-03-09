@@ -22,7 +22,7 @@ In this examination assignment it is your task to get this application properly 
 
 - The deadline for submitting the assignment is Sunday, April 6, 23:59 (end of week 3.8).
 
-- The assignment is done in groups of two students who have registered with their teacher. Groups are formed in week 7, with group members both having to have submitted an equal number of practice assignments to be allowed to work together (maximum 1 week difference).
+- The assignment is done in groups of two students who have registered with their teacher. Groups are formed in week 6, with group members both having to have submitted an equal number of practice assignments to be allowed to work together (maximum 1 week difference).
 
 - Your grade is determined based on the assessment that takes place after you have submitted your assignment. So make sure you understand all the parts you have made, theoretical questions will also be asked about your solution.
 
@@ -42,7 +42,7 @@ During the execution of the assignment, you must follow a proper software develo
 
 In the repository, you will find a folder containing a backend application. This is a Laravel application provided by us that returns data in JSON format. Please read the `README.md` in the backend folder for more information about how to get the project up and running. If you run the application and go to http://localhost:8000/api/goals, you will see a list of goals that are currently present in the database. Initially, the database is empty.
 
-To add goals to the backend, you need to do a POST request in the correct format (see the `seed-application` folder). You can use `curl` for this. Make sure you set the content type to `application/json` in your Curl command. In addition, the REST endpoint must be configurable through an environment variable in the script. It would be useful if we can pass the data file as a parameter to the script, so that we can easily load a different data file.
+To add goals to the backend, you need to do a POST request in the correct format (see the `seed-application` folder). You can use `curl` for this. Make sure you set the content type to `application/json` in your Curl command. In addition, the REST endpoint must be configurable through an environment variable in the script. Make sure that we can pass the data file as a parameter to the script, so that we can easily load a different data file.
 
 Write the Bash script `add_data.sh`, which should read the data file `data.md` and then add each goal to the backend (also known as 'seeding'). Provide sufficient error handling.
 
