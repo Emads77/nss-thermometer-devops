@@ -3,7 +3,7 @@ _april 2025_
 
 De Nationale Studenten Enquête is een grootschalig landelijk tevredenheidsonderzoek waarin studenten hun mening geven over hun HBO-opleiding en onderwijsinstelling. Waarschijnlijk heb jij deze enquête ook wel eens ingevuld.
 
-HBO-ICT gebruikt verschillende systemen om de NSE te promoten. Een van deze systemen is de NSE Stretch Goal Thermometer. De applicatie die op verschillende schermen binnen Saxion zichtbaar is, die het huidige aantal stemmen en de behaalde stretch goals weergeeft.
+HBO-ICT gebruikt verschillende systemen om de NSE te promoten. Een van deze systemen is de NSE Stretch Goal Thermometer. De applicatie die op verschillende schermen binnen Saxion zichtbaar is en die het huidige aantal stemmen en de behaalde stretch goals weergeeft.
 
 In deze examenopdracht is het jouw taak om deze applicatie goed draaiende te krijgen in de cloud. Alles moet zo geautomatiseerd worden zodat een simpele push naar Gitlab de applicatie uitrolt naar een schaalbare cloud gebaseerde oplossing.
 
@@ -37,7 +37,7 @@ In deze examenopdracht is het jouw taak om deze applicatie goed draaiende te kri
     23:59 (eind week 3.8).
 
 -   De opdracht wordt gemaakt in groepjes van twee studenten die zich
-    hebben aangemeld bij de docent. Groepjes worden gevormd in week 7,
+    hebben aangemeld bij de docent. Groepjes worden gevormd in week 6,
     waarbij groepsleden allebei evenveel oefenopdrachten ingeleverd
     moeten hebben om te mogen samenwerken (maximaal 1 week verschil).
 

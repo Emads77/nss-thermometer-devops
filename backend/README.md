@@ -34,4 +34,6 @@ You could use the following `artisan` commands for this project.
 - `php artisan l5-swagger:generate` create the swagger documentation (available at /api/documentation in the browser).
 
 ## Dockerizing the applicatiom
-We could reuse our docker containers properly later on when deploying them to the cloud. Therefore we are aiming for a production ready docker composition. Please note: `php artisan` can be used during development, but it is not suitable for production environments! Therefore you need to find out how to run a Laravel application properly in production. This will mean that you will need two containers for the backend. One that acts as a webserver and one that acts as a php processor. Consult the laravel documentation for more information about deployment.
+We could reuse our docker containers properly later on when deploying them to the cloud. Therefore we are aiming for a production ready docker composition. **Please note: `php artisan` can be used during development, but it is not suitable for production environments!**
+
+Therefore you need to find out how to run a Laravel application properly in production. There are multiple solutions (often with 2 containers for running the backend: a webserver and a FastCGI Process Manager (FPM)), although it is also possible to run everything in a single container. Please investigate the possibilities and find a good solution. Please use Apache Httpd or nginx as a webserver for the backend. You won't need to change the source code or install additional packages in laravel to dockerize the backend.
