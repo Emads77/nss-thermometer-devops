@@ -72,9 +72,9 @@ Implement a development pipeline with continuous integration for the app. The CI
 
 Create a suitable infrastructure for the application in AWS using Terraform. The infrastructure does not (yet) need to be high availability. If this is not possible with Terraform, you may manually create the infrastructure (of course, you will lose points for this). Your Terraform configuration must be placed in the supplied `infra` folder.
 
-The application does not need to be deployed with terraform to your created infrastructure. This will be done in the next step with Continious Deployment.
+The application does not need to be deployed with terraform to your created infrastructure. This will be done in the next step with Continuous Deployment.
 
-### 5. Automate the deployment of applications (continious deployment)
+### 5. Automate the deployment of applications (Continuous Deployment)
 
 Automate the deployment of the backend so that, when we commit to the main branch, the Gitlab CI:
 
