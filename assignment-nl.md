@@ -126,9 +126,9 @@ aanmaken (hiermee verlies je natuurlijk wel punten). Je
 Terraform-configuratie moet in de meegeleverde `infra` map worden
 geplaatst.
 
-De applicatie hoeft nog niet uitgerolt te worden met terraform naar de zojuist gemaakte infrastructuur. Dit ga je doen in de volgende stap met Continious Deployment.
+De applicatie hoeft nog niet uitgerolt te worden met terraform naar de zojuist gemaakte infrastructuur. Dit ga je doen in de volgende stap met Continuous Deployment.
 
-### 5. Automatiseer de deployment van de applicaties
+### 5. Automatiseer de deployment van de applicaties (Continuous Deployment)
 
 Automatiseer de deployment van de backend zodat, wanneer we committen
 naar de main branch, de Gitlab CI:
