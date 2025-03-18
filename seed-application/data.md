@@ -8,8 +8,12 @@
 | goal       | Cake by teachers                                                     |
 | target     | 35%                                                                  |
 | goal       | Custom NSE rubber duckies                                            |
+| target     | abc%                                                                 |
+| goal       | Invalid percentage, should be skipped by your script                 |
 | target     | 40%                                                                  |
 | goal       | Onesie day! (Teachers included)                                      |
+| target     | 42%                                                                  |
+| doel       | Invalid key used, this goal should be skipped                        |
 | target     | 45%                                                                  |
 | goal       | Teacher will perform a parody on some internet meme (within reason)  |
 | target     | 50%                                                                  |
