@@ -1,20 +1,14 @@
 stages:
   - backend
   - frontend
-
 backend:
   stage: backend
   image: php:8.2-fpm
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}
-    paths:
-      - backend/vendor/                
-      - /root/.composer/cache         
   before_script:
     - apt-get update && apt-get install -y git curl zip unzip libpq-dev libzip-dev libonig-dev libsqlite3-dev sqlite3
     - docker-php-ext-install pdo pdo_mysql pdo_pgsql bcmath mbstring zip
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-    - cd ./backend/ && composer install --prefer-dist --no-interaction
+    - cd ./backend/ && composer install
   script:
     - |
       cat > .env <<'EOF'
@@ -30,18 +24,16 @@ backend:
       DB_DATABASE=/builds/saxionnl/hbo-ict/2.3-devops/2024-2025/exam-regular/17/backend/database/database.sqlite
       EOF
     - php artisan migrate --force
-    - mkdir -p ./tests/Unit && php artisan test
-
+    - mkdir -p ./tests/Unit && php artisan test --log-junit test-report.xml
+  artifacts:
+    paths:
+      - test-report.xml
+    expire_in: 1 week
 frontend:
   stage: frontend
   image: node:18-alpine
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}
-    paths:
-      - frontend/node_modules/        
-      - /root/.npm                    
   before_script:
-    - cd ./frontend && npm install
+    - pwd && cd ./frontend && npm install
   script:
     - npm run build
   artifacts:
