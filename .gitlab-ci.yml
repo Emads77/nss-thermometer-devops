@@ -10,8 +10,20 @@ backend:
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
     - cd ./backend/ && composer install
   script:
+    - |
+      cat > .env <<'EOF'
+      APP_NAME=NSSThermometerBackend
+      APP_ENV=local
+      APP_KEY=base64:zYgRkEuotrmHIkGQlAUY/VvTKOUSjjpWF7DLco5vRok=
+      APP_DEBUG=true
+      APP_URL=http://localhost
+      LOG_CHANNEL=stack
+      CACHE_DRIVER=file
+      QUEUE_CONNECTION=sync
+      DB_CONNECTION=sqlite
+      DB_DATABASE=/builds/saxionnl/hbo-ict/2.3-devops/2024-2025/exam-regular/17/backend/database/database.sqlite
+      EOF
     - php artisan migrate --force
-    - echo "DB_CONNECTION=sqlite\nDB_DATABASE=/builds/saxionnl/hbo-ict/2.3-devops/2024-2025/exam-regular/17/backend/database/database.sqlite" > .env
     - mkdir ./tests/Unit && php artisan test
 frontend:
   stage: frontend
