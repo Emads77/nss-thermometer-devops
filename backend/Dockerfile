@@ -1,74 +1,35 @@
-version: '3.8'
+# Stage 1: Composer dependencies
+FROM composer:2.6 AS vendor
+WORKDIR /app
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --prefer-dist --optimize-autoloader
 
-services:
-    # PostgreSQL Database
-    db:
-        image: postgres:13
-        container_name: postgres
-        environment:
-            POSTGRES_DB: nss_thermometer
-            POSTGRES_USER: laravel
-            POSTGRES_PASSWORD: secret
-        volumes:
-            - postgres-data:/var/lib/postgresql/data
-        ports:
-            - "5432:5432"
-        healthcheck:
-            test: ["CMD-SHELL", "pg_isready -U laravel"]
-            interval: 10s
-            timeout: 5s
-            retries: 5
+# Stage 2: PHP 8.2 with PostgreSQL
+FROM php:8.2-fpm-alpine
 
-    # Laravel Backend with Nginx
-    backend:
-        build:
-            context: ./backend
-            dockerfile: Dockerfile
-        container_name: backend
-        volumes:
-            - ./backend:/var/www/html
-            # Add nginx configuration volume
-            - ./backend/nginx.conf:/etc/nginx/nginx.conf
-        environment:
-            # Production environment variables
-            APP_ENV: production
-            APP_DEBUG: "false"
-            DB_CONNECTION: pgsql
-            DB_HOST: db
-            DB_PORT: 5432
-            DB_DATABASE: nss_thermometer
-            DB_USERNAME: laravel
-            DB_PASSWORD: secret
-        depends_on:
-            db:
-                condition: service_healthy
-        healthcheck:
-            test: ["CMD", "curl", "-f", "http://localhost/up"]
-            interval: 10s
-            timeout: 5s
-            retries: 5
-        ports:
-            - "80:80"
-        # Use a production-ready command or CMD in Dockerfile
+# Install system dependencies
+RUN apk add --no-cache \
+    postgresql-dev \
+    zip \
+    unzip \
+    curl \
+    bash
 
-    # Seeder Container
-    seed:
-        build:
-            context: ./seed-application
-            dockerfile: Dockerfile
-        container_name: seeder
-        depends_on:
-            backend:
-                condition: service_healthy
-        environment:
-            BACKEND_URL: http://backend
-            # Add more environment variables as needed
+# Set working directory
+WORKDIR /var/www/html
 
-volumes:
-    postgres-data:
+# Copy vendor from build stage
+COPY --from=vendor /app/vendor ./vendor
 
-networks:
-    default:
-        driver: bridge
+# Copy Laravel app
+COPY . .
 
+# Permissions
+RUN chmod -R 755 storage bootstrap/cache && \
+    chown -R www-data:www-data storage bootstrap/cache
 
+# Expose FPM port
+EXPOSE 9000
+
+# Start FPM
+CMD ["php-fpm"]
