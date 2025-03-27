@@ -13,17 +13,17 @@ backend:
     - apt-get update && apt-get install -y git curl zip unzip libpq-dev libzip-dev libonig-dev libsqlite3-dev
     - docker-php-ext-install pdo pdo_mysql pdo_pgsql bcmath mbstring zip
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-    - composer install
+    - cd ./backend/ && composer install
   script:
-    - php artisan test
+    - cd ./backend/ && php artisan test
 frontend:
   stage: frontend
   image: node:18-alpine
   before_script:
-    - npm install
+    - cd ./frontend && npm install
   script:
-    - npm run build
+    - cd ./frontend && npm run build
   artifacts:
     paths:
-      - dist
+      - ./frontend/dist
     expire_in: 1 week
