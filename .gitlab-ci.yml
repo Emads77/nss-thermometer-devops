@@ -15,7 +15,7 @@ backend:
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
     - cd ./backend/ && composer install
   script:
-    - php artisan test
+    - mkdir ./tests/Unit && php artisan test
 frontend:
   stage: frontend
   image: node:18-alpine
