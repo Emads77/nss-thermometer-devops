@@ -27,7 +27,7 @@ backend:
     - mkdir -p ./tests/Unit && php artisan test --log-junit test-report.xml
   artifacts:
     paths:
-      - test-report.xml
+      - ./backend/test-report.xml
     expire_in: 1 week
 frontend:
   stage: frontend
