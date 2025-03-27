@@ -1,24 +1,74 @@
-FROM php:8.2-fpm
+version: '3.8'
 
-WORKDIR /var/www/html
+services:
+    # PostgreSQL Database
+    db:
+        image: postgres:13
+        container_name: postgres
+        environment:
+            POSTGRES_DB: nss_thermometer
+            POSTGRES_USER: laravel
+            POSTGRES_PASSWORD: secret
+        volumes:
+            - postgres-data:/var/lib/postgresql/data
+        ports:
+            - "5432:5432"
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U laravel"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    git curl zip unzip libpq-dev libzip-dev libonig-dev sqlite3 libsqlite3-dev \
-    && docker-php-ext-install pdo pdo_pgsql pdo_sqlite mbstring bcmath zip
+    # Laravel Backend with Nginx
+    backend:
+        build:
+            context: ./backend
+            dockerfile: Dockerfile
+        container_name: backend
+        volumes:
+            - ./backend:/var/www/html
+            # Add nginx configuration volume
+            - ./backend/nginx.conf:/etc/nginx/nginx.conf
+        environment:
+            # Production environment variables
+            APP_ENV: production
+            APP_DEBUG: "false"
+            DB_CONNECTION: pgsql
+            DB_HOST: db
+            DB_PORT: 5432
+            DB_DATABASE: nss_thermometer
+            DB_USERNAME: laravel
+            DB_PASSWORD: secret
+        depends_on:
+            db:
+                condition: service_healthy
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost/up"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+        ports:
+            - "80:80"
+        # Use a production-ready command or CMD in Dockerfile
 
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+    # Seeder Container
+    seed:
+        build:
+            context: ./seed-application
+            dockerfile: Dockerfile
+        container_name: seeder
+        depends_on:
+            backend:
+                condition: service_healthy
+        environment:
+            BACKEND_URL: http://backend
+            # Add more environment variables as needed
 
-# Copy Laravel project
-COPY . .
+volumes:
+    postgres-data:
 
-# Install dependencies
-RUN composer install --no-dev --optimize-autoloader
+networks:
+    default:
+        driver: bridge
 
-# Set permissions
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-EXPOSE 9000
-
-CMD ["php-fpm"]
