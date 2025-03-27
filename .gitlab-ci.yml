@@ -4,17 +4,13 @@ stages:
 backend:
   stage: backend
   image: php:8.2-fpm
-  services:
-    - name: mysql:5.7
-  variables:
-    MYSQL_DATABASE: mydb
-    MYSQL_ROOT_PASSWORD: secret
   before_script:
     - apt-get update && apt-get install -y git curl zip unzip libpq-dev libzip-dev libonig-dev libsqlite3-dev
     - docker-php-ext-install pdo pdo_mysql pdo_pgsql bcmath mbstring zip
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
     - cd ./backend/ && composer install
   script:
+    - php artisan migrate --force
     - mkdir ./tests/Unit && php artisan test
 frontend:
   stage: frontend
