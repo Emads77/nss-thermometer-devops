@@ -22,6 +22,7 @@ services:
     container_name: php-fpm
     volumes:
       - ./backend:/var/www/html
+      - vendor_data:/var/www/html/vendor
     environment:
       DB_CONNECTION: pgsql
       DB_HOST: db
@@ -72,3 +73,4 @@ services:
 
 volumes:
   postgres-data:
+  vendor_data:
