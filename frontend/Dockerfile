@@ -3,7 +3,7 @@ FROM node:18-alpine AS build
 # Node
 # Create app directory
 WORKDIR /app
-
+ARG VITE_API_URL
 COPY . .
 RUN npm install
 
