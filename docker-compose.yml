@@ -15,17 +15,19 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - internal
 
   php-fpm:
     build:
       context: ./backend
     container_name: php-fpm
     volumes:
-    - ./backend/app:/var/www/html/app
-    - ./backend/config:/var/www/html/config
-    - ./backend/routes:/var/www/html/routes
-    - ./backend/resources:/var/www/html/resources
-    - vendor_data:/var/www/html/vendor
+    - ./backend/app:/var/www/html/app:ro
+    - ./backend/config:/var/www/html/config:ro
+    - ./backend/routes:/var/www/html/routes:ro
+    - ./backend/resources:/var/www/html/resources:ro
+    - vendor_data:/var/www/html/vendor:ro
     environment:
       DB_CONNECTION: pgsql
       DB_HOST: db
@@ -36,6 +38,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    networks:
+      - internal
 
   backend-nginx:
     image: nginx:stable-alpine
@@ -53,6 +57,9 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+        - internal
+        - public
 
   frontend:
     build:
@@ -63,6 +70,9 @@ services:
     depends_on:
       backend-nginx:
         condition: service_healthy
+    networks:
+      - internal
+      - public
 
   seed:
     build:
@@ -73,7 +83,14 @@ services:
     depends_on:
       backend-nginx:
         condition: service_healthy
+    networks:
+      - internal
 
 volumes:
   postgres-data:
   vendor_data:
+
+networks:
+  internal:
+    internal: true
+  public:
