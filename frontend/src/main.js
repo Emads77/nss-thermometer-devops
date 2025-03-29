@@ -5,6 +5,10 @@ import { createAnimationCallToActionScreen, createAnimationPercentageBarScreen, 
 // Settings
 const SLIDE_DURATION_MS = 8000;
 
+// API URL
+const API_URL = import.meta.env.VITE_API_URL || `http://127.0.0.1:8000`;
+
+
 // State variables
 let currentScreen = 0;
 let percentage = 0;
@@ -60,7 +64,7 @@ async function loadFromAPI() {
   let success = true;
 
   try {
-    const response = await fetch("http://127.0.0.1:8000/api/percentage");
+    const response = await fetch(`${API_URL}/api/percentage`);
     percentage = (await response.json()).percentage;
   } catch (error) {
     console.error("Error fetching percentage data:", error);
@@ -68,7 +72,7 @@ async function loadFromAPI() {
   }
 
   try {
-    const response = await fetch("http://127.0.0.1:8000/api/goals");
+    const response = await fetch(`${API_URL}/api/goals`);
     goals = await response.json();
   } catch (error) {
     console.error("Error fetching goals data:", error);
