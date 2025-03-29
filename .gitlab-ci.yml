@@ -7,11 +7,12 @@ workflow:
     - when: never
 
 stages:
-  - backend
-  - frontend
+  - backend-test
+  - docker-deploy
+  - frontend-build
 
 backend:
-  stage: backend
+  stage: backend-test
   image: php:8.2-fpm
   cache:
     key: ${CI_COMMIT_REF_SLUG}
@@ -44,8 +45,20 @@ backend:
       - ./backend/test-report.xml
     expire_in: 1 week
 
+docker-register:
+  stage: docker-deploy
+  image: docker:latest
+  services:
+    - docker:dind
+  variables:
+    DOCKER_DRIVER: overlay2
+  script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
+    - docker build -t "$CI_REGISTRY_IMAGE/backend:latest" -f backend/Dockerfile .
+    - docker push "$CI_REGISTRY_IMAGE/backend:latest"
+
 frontend:
-  stage: frontend
+  stage: frontend-build
   image: node:18-alpine
   cache:
     key: ${CI_COMMIT_REF_SLUG}
