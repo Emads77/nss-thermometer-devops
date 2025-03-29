@@ -1,6 +1,15 @@
+workflow:
+  rules:
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+      when: always
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: always
+    - when: never
+
 stages:
   - backend
   - frontend
+
 backend:
   stage: backend
   image: php:8.2-fpm
@@ -34,6 +43,7 @@ backend:
     paths:
       - ./backend/test-report.xml
     expire_in: 1 week
+
 frontend:
   stage: frontend
   image: node:18-alpine
