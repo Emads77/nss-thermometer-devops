@@ -46,6 +46,9 @@ backend-test:
       APP_NAME=NSSThermometerBackend
       APP_ENV=local
       APP_KEY=base64:zYgRkEuotrmHIkGQlAUY/VvTKOUSjjpWF7DLco5vRok=
+      APP_DEBUG=true
+      APP_URL=http://localhost
+      LOG_CHANNEL=stack
       CACHE_DRIVER=file
       QUEUE_CONNECTION=sync
       DB_CONNECTION=sqlite
