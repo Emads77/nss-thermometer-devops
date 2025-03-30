@@ -98,7 +98,18 @@ deploy:
       docker stop nss-backend || true &&
       docker rm nss-backend || true &&
       docker pull $DOCKER_IMAGE_BACKEND:latest &&
-      docker run -d --name nss-backend -p 8000:8000 $DOCKER_IMAGE_BACKEND:latest
+
+      docker run -d --name nss-backend \
+        -e DB_CONNECTION=pgsql \
+        -e DB_HOST=$DB_HOST \
+        -e DB_PORT=$DB_PORT \
+        -e DB_DATABASE=$DB_NAME \
+        -e DB_USERNAME=$DB_USERNAME \
+        -e DB_PASSWORD=$DB_PASSWORD \
+        -p 8000:8000 $DOCKER_IMAGE_BACKEND:latest &&
+
+      docker exec nss-backend php artisan migrate --force
       "
   only:
     - main
+
