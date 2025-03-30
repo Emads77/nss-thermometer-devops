@@ -58,10 +58,10 @@ backend-test:
     - chmod -R 0777 ./database
     - pwd && php artisan migrate --force
 
-    artifacts:
-      paths:
-        - ./backend/test-report.xml
-      expire_in: 1 week
+  artifacts:
+    paths:
+      - ./backend/test-report.xml
+    expire_in: 1 week
 
 frontend:
   stage: frontend
