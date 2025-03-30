@@ -26,22 +26,18 @@ variables:
   DB_USERNAME: $DB_USERNAME
   DB_PASSWORD: $DB_PASSWORD
 
-backend-test:
-  stage: backend-test
+backend:
+  stage: backend
   image: php:8.2-fpm
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
       - backend/vendor/
       - /root/.composer/cache
-      - backend/vendor/
-      - /root/.composer/cache
   before_script:
     - apt-get update && apt-get install -y git curl zip unzip libpq-dev libzip-dev libonig-dev libsqlite3-dev sqlite3
     - docker-php-ext-install pdo pdo_mysql pdo_pgsql bcmath mbstring zip pdo_sqlite
-    - docker-php-ext-install pdo pdo_mysql pdo_pgsql bcmath mbstring zip pdo_sqlite
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-    - cd backend && composer install
     - cd backend && composer install
   script:
     - |
@@ -60,11 +56,8 @@ backend-test:
     - touch ./database/database.sqlite
     - php artisan migrate --force
     - mkdir -p ./tests/Unit && php artisan test --log-junit test-report.xml
-    - php artisan migrate --force
-    - mkdir -p ./tests/Unit && php artisan test --log-junit test-report.xml
   artifacts:
     paths:
-      - backend/test-report.xml
       - backend/test-report.xml
     expire_in: 1 week
 
@@ -102,6 +95,7 @@ deploy:
   before_script:
     - apk add --no-cache openssh docker-cli
     - mkdir -p ~/.ssh
+    - cat "$SSH_KEY"
     - cat "$SSH_KEY" > ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
     - ssh-keyscan -H "$EC2_HOST" >> ~/.ssh/known_hosts
