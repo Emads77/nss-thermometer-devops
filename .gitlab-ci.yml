@@ -11,7 +11,7 @@ workflow:
 #trigger
 
 stages:
-  - backend-test
+  - backend
   - frontend
   - docker-build
   - deploy
@@ -26,19 +26,19 @@ variables:
   DB_USERNAME: $DB_USERNAME
   DB_PASSWORD: $DB_PASSWORD
 
-
-backend-test:
-  stage: backend-test
+backend:
+  stage: backend
   image: php:8.2-fpm
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
-      - /root/.composer/cache 
+      - backend/vendor/
+      - /root/.composer/cache
   before_script:
     - apt-get update && apt-get install -y git curl zip unzip libpq-dev libzip-dev libonig-dev libsqlite3-dev sqlite3
-    - docker-php-ext-install pdo pdo_mysql pdo_pgsql pdo_sqlite bcmath mbstring zip
+    - docker-php-ext-install pdo pdo_mysql pdo_pgsql bcmath mbstring zip pdo_sqlite
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-    - cd ./backend/ && composer install
+    - cd backend && composer install
   script:
     - |
       cat > .env <<EOF
@@ -53,14 +53,12 @@ backend-test:
       DB_CONNECTION=sqlite
       DB_DATABASE=/builds/saxionnl/hbo-ict/2.3-devops/2024-2025/exam-regular/17/backend/database/database.sqlite
       EOF
-    - mkdir -p ./database
     - touch ./database/database.sqlite
-    - chmod -R 0777 ./database
-    - pwd && php artisan migrate --force
-
+    - php artisan migrate --force
+    - mkdir -p ./tests/Unit && php artisan test --log-junit test-report.xml
   artifacts:
     paths:
-      - ./backend/test-report.xml
+      - backend/test-report.xml
     expire_in: 1 week
 
 frontend:
@@ -119,4 +117,3 @@ deploy:
       "
   #only:
    # - main
-
