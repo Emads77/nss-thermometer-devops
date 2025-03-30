@@ -77,3 +77,4 @@ frontend:
     paths:
       - ./frontend/dist
     expire_in: 1 week
+# triggering the ci pipe
