@@ -53,7 +53,7 @@ backend:
       CACHE_DRIVER=file
       QUEUE_CONNECTION=sync
       DB_CONNECTION=sqlite
-      DB_DATABASE=/builds/saxionnl/hbo-ict/2.3-devops/2024-2025/exam-regular/17/backend/database/database.sqlite
+      DB_DATABASE=./database.sqlite
       EOF
     - touch ./database/database.sqlite
     - php artisan migrate --force
