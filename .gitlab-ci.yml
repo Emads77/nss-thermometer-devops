@@ -26,19 +26,19 @@ variables:
   DB_USERNAME: $DB_USERNAME
   DB_PASSWORD: $DB_PASSWORD
 
-
 backend-test:
   stage: backend-test
   image: php:8.2-fpm
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
-      - /root/.composer/cache 
+      - backend/vendor/
+      - /root/.composer/cache
   before_script:
     - apt-get update && apt-get install -y git curl zip unzip libpq-dev libzip-dev libonig-dev libsqlite3-dev sqlite3
-    - docker-php-ext-install pdo pdo_mysql pdo_pgsql pdo_sqlite bcmath mbstring zip
+    - docker-php-ext-install pdo pdo_mysql pdo_pgsql bcmath mbstring zip pdo_sqlite
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-    - cd ./backend/ && composer install
+    - cd backend && composer install
   script:
     - |
       cat > .env <<EOF
@@ -53,14 +53,12 @@ backend-test:
       DB_CONNECTION=sqlite
       DB_DATABASE=/builds/saxionnl/hbo-ict/2.3-devops/2024-2025/exam-regular/17/backend/database/database.sqlite
       EOF
-    - mkdir -p ./database
     - touch ./database/database.sqlite
-    - chmod -R 0777 ./database
-    - pwd && php artisan migrate --force
-
+    - php artisan migrate --force
+    - mkdir -p ./tests/Unit && php artisan test --log-junit test-report.xml
   artifacts:
     paths:
-      - ./backend/test-report.xml
+      - backend/test-report.xml
     expire_in: 1 week
 
 frontend:
@@ -97,26 +95,10 @@ deploy:
   before_script:
     - apk add --no-cache openssh docker-cli
     - mkdir -p ~/.ssh
-    - echo "$SSH_KEY" > ~/.ssh/id_rsa
+    - cat "$SSH_KEY" > ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
     - ssh-keyscan -H "$EC2_HOST" >> ~/.ssh/known_hosts
   script:
-    - ssh -o StrictHostKeyChecking=no $SSH_USER@$EC2_HOST "
-      docker stop nss-backend || true &&
-      docker rm nss-backend || true &&
-      docker pull $DOCKER_IMAGE_BACKEND:latest &&
-
-      docker run -d --name nss-backend \
-        -e DB_CONNECTION=pgsql \
-        -e DB_HOST=$DB_HOST \
-        -e DB_PORT=5432 \
-        -e DB_DATABASE=$DB_NAME \
-        -e DB_USERNAME=$DB_USERNAME \
-        -e DB_PASSWORD=$DB_PASSWORD \
-        -p 8000:8000 $DOCKER_IMAGE_BACKEND:latest &&
-
-      docker exec nss-backend php artisan migrate --force
-      "
+      - ssh -o StrictHostKeyChecking=no $SSH_USER@$EC2_HOST "sudo docker login -u gitlab-ci-token -p \"$CI_JOB_TOKEN\" \"$CI_REGISTRY\" && sudo docker stop nss-backend || true && sudo docker rm nss-backend || true && sudo docker pull $DOCKER_IMAGE_BACKEND:latest && sudo docker run -d --name nss-backend -e DB_CONNECTION=pgsql -e DB_HOST=$DB_HOST -e DB_PORT=5432 -e DB_DATABASE=$DB_NAME -e DB_USERNAME=$DB_USERNAME -e DB_PASSWORD=$DB_PASSWORD -p 8000:8000 $DOCKER_IMAGE_BACKEND:latest && sudo docker exec nss-backend php artisan migrate --force"
   #only:
    # - main
-

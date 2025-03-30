@@ -216,7 +216,30 @@ output "db_username" {
   value       = aws_db_instance.app_db.username
 }
 
-output "private_key" {
-  value     = tls_private_key.ci_key.private_key_pem
-  sensitive = true
+output "db_password" {
+  description = "Database password"
+  value       = var.db_password
+  sensitive   = true
+}
+
+output "ec2_ssh_key" {
+  description = "Private SSH key for EC2"
+  value       = tls_private_key.ci_key.private_key_pem
+  sensitive   = true
+}
+
+# Write outputs to a file so you can copy them into GitLab CI/CD variables
+resource "local_file" "gitlab_env" {
+  content  = <<EOF
+export EC2_PUBLIC_IP=${aws_instance.app_server.public_ip}
+export EC2_PUBLIC_DNS=${aws_instance.app_server.public_dns}
+export EC2_SSH_KEY='${tls_private_key.ci_key.private_key_pem}'
+export DB_HOST=${aws_db_instance.app_db.endpoint}
+export DB_PORT=${aws_db_instance.app_db.port}
+export DB_NAME=${aws_db_instance.app_db.db_name}
+export DB_USERNAME=${aws_db_instance.app_db.username}
+export DB_PASSWORD=${var.db_password}
+EOF
+
+  filename = "${path.module}/gitlab_env.sh"
 }
