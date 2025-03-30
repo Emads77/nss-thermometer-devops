@@ -95,8 +95,8 @@ deploy:
   before_script:
     - apk add --no-cache openssh docker-cli
     - mkdir -p ~/.ssh
-    - echo "$SSH_KEY"
-    - echo "$SSH_KEY" > ~/.ssh/id_rsa
+    - cat "$SSH_KEY"
+    - cat "$SSH_KEY" > ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
     - ssh-keyscan -H "$EC2_HOST" >> ~/.ssh/known_hosts
   script:
