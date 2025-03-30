@@ -30,6 +30,10 @@ variables:
 backend-test:
   stage: backend-test
   image: php:8.2-fpm
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - /root/.composer/cache 
   before_script:
     - apt-get update && apt-get install -y git curl zip unzip libpq-dev libzip-dev libonig-dev libsqlite3-dev sqlite3
     - docker-php-ext-install pdo pdo_mysql pdo_pgsql bcmath mbstring zip
@@ -49,7 +53,7 @@ backend-test:
       DB_CONNECTION=sqlite
       DB_DATABASE=/builds/saxionnl/hbo-ict/2.3-devops/2024-2025/exam-regular/17/backend/database/database.sqlite
       EOF
-    - php artisan migrate --force
+    - pwd && php artisan migrate --force
     - mkdir -p ./tests/Unit && php artisan test --log-junit test-report.xml
   artifacts:
     paths:
