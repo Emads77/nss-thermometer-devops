@@ -27,6 +27,7 @@ variables:
   DB_PASSWORD: $DB_PASSWORD
 
 
+
 backend:
   stage: backend
   image: php:8.2-fpm
@@ -52,7 +53,7 @@ backend:
       CACHE_DRIVER=file
       QUEUE_CONNECTION=sync
       DB_CONNECTION=sqlite
-      DB_DATABASE=/builds/$CI_PROJECT_PATH/backend/database/database.sqlite
+      DB_DATABASE=/builds/saxionnl/hbo-ict/2.3-devops/2024-2025/exam-regular/17/backend/database/database.sqlite
       EOF
     - php artisan migrate --force
     - mkdir -p ./tests/Unit && php artisan test --log-junit test-report.xml
