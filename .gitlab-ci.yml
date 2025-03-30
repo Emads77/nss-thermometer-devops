@@ -1,32 +1,30 @@
-workflow:
-  rules:
-    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
-      when: always
-    - if: '$CI_COMMIT_BRANCH == "main"'
-      when: always
-    - when: never
-
 stages:
-  - backend-test
-  - docker-deploy
-  - frontend-build
+  - backend
+  - frontend
+  - docker-build
+
+variables:
+  DOCKER_IMAGE_BACKEND: "$CI_REGISTRY_IMAGE/backend"
+  SSH_USER: ubuntu
+  SSH_HOST: $EC2_PUBLIC_IP
+  SSH_KEY: $EC2_SSH_KEY
 
 backend:
-  stage: backend-test
+  stage: backend
   image: php:8.2-fpm
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
-      - backend/vendor/              
-      - /root/.composer/cache 
+      - backend/vendor/
+      - /root/.composer/cache
   before_script:
     - apt-get update && apt-get install -y git curl zip unzip libpq-dev libzip-dev libonig-dev libsqlite3-dev sqlite3
     - docker-php-ext-install pdo pdo_mysql pdo_pgsql bcmath mbstring zip
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-    - cd ./backend/ && composer install
+    - cd backend && composer install
   script:
     - |
-      cat > .env <<'EOF'
+      cat > .env <<EOF
       APP_NAME=NSSThermometerBackend
       APP_ENV=local
       APP_KEY=base64:zYgRkEuotrmHIkGQlAUY/VvTKOUSjjpWF7DLco5vRok=
@@ -36,44 +34,39 @@ backend:
       CACHE_DRIVER=file
       QUEUE_CONNECTION=sync
       DB_CONNECTION=sqlite
-      DB_DATABASE=/builds/saxionnl/hbo-ict/2.3-devops/2024-2025/exam-regular/17/backend/database/database.sqlite
+      DB_DATABASE=/builds/$CI_PROJECT_PATH/backend/database/database.sqlite
       EOF
     - php artisan migrate --force
     - mkdir -p ./tests/Unit && php artisan test --log-junit test-report.xml
   artifacts:
     paths:
-      - ./backend/test-report.xml
+      - backend/test-report.xml
     expire_in: 1 week
 
-docker-register:
-  stage: docker-deploy
-  image: docker:latest
-  services:
-    - docker:dind
-  variables:
-    DOCKER_DRIVER: overlay2
-  rules:
-    - changes:
-        - backend/**/* 
-    - when: never
-  script:
-    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
-    - docker build -t "$CI_REGISTRY_IMAGE/backend:latest" -f backend/Dockerfile .
-    - docker push "$CI_REGISTRY_IMAGE/backend:latest"
-
 frontend:
-  stage: frontend-build
+  stage: frontend
   image: node:18-alpine
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
-      - frontend/node_modules/   
-      - /root/.npm 
+      - frontend/node_modules/
+      - /root/.npm
   before_script:
-    - pwd && cd ./frontend && npm install
+    - cd frontend && npm install
   script:
     - npm run build
   artifacts:
     paths:
-      - ./frontend/dist
+      - frontend/dist
     expire_in: 1 week
+
+build_backend_image:
+  stage: docker-build
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin "$CI_REGISTRY"
+  script:
+    - docker build -t "$DOCKER_IMAGE_BACKEND:latest" ./backend
+    - docker push "$DOCKER_IMAGE_BACKEND:latest"
