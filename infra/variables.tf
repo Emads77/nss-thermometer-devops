@@ -33,3 +33,9 @@ variable "my_ip_cidr" {
   description = "  IP address in CIDR notation for SSH access"
   default     = "0.0.0.0/0"
 }
+
+variable "db_password" {
+  type        = string
+  sensitive   = true
+  description = "Password for the PostgreSQL DB instance"
+}

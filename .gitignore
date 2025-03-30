@@ -184,3 +184,4 @@ app.*.symbols
 infra/.*
 infra/terraform.tfstate
 infra/terraform.tfstate.backup
+infra/gitlab_env.sh
