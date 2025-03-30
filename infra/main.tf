@@ -42,11 +42,23 @@ resource "aws_subnet" "public_subnet" {
   vpc_id                  = aws_vpc.app_vpc.id
   cidr_block             = "10.0.1.0/24"
   map_public_ip_on_launch = true
+  availability_zone       = "us-east-1b"
 
   tags = {
     Name = "${var.project_name}-public-subnet"
   }
 }
+
+resource "aws_subnet" "public_subnet_2" {
+  vpc_id                  = aws_vpc.app_vpc.id
+  cidr_block              = "10.0.2.0/24"
+  map_public_ip_on_launch = true
+  availability_zone       = "us-east-1a"
+  tags = {
+    Name = "${var.project_name}-public-subnet-2"
+  }
+}
+
 
 # EC2 security group: allows SSH (22), port 8000, and port 3000 inbound
 resource "aws_security_group" "app_sg" {
@@ -138,7 +150,7 @@ resource "aws_instance" "app_server" {
 
 resource "aws_db_subnet_group" "app_db_subnet_group" {
   name       = "${var.project_name}-db-subnet-group"
-  subnet_ids = [aws_subnet.public_subnet.id]
+  subnet_ids = [aws_subnet.public_subnet.id, aws_subnet.public_subnet_2.id]
 
   tags = {
     Name = "${var.project_name}-db-subnet-group"
@@ -191,7 +203,7 @@ output "db_port" {
 
 output "db_name" {
   description = "Database name"
-  value       = aws_db_instance.app_db.name
+  value       = aws_db_instance.app_db.db_name
 }
 
 output "db_username" {
