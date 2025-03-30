@@ -154,7 +154,7 @@ resource "aws_db_instance" "app_db" {
 
   db_name                = "thermometer_db"
   username               = "db_user"
-  password               = "supersecurepassword"
+  password = var.db_password
 
   db_subnet_group_name   = aws_db_subnet_group.app_db_subnet_group.name
   vpc_security_group_ids = [aws_security_group.db_sg.id]
