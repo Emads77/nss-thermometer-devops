@@ -128,9 +128,14 @@ resource "aws_security_group" "db_sg" {
   }
 }
 
+resource "tls_private_key" "ci_key" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
 resource "aws_key_pair" "app_key" {
   key_name   = "${var.project_name}-key"
-  public_key = file(var.public_key_path)
+  public_key = tls_private_key.ci_key.public_key_openssh
 }
 
 resource "aws_instance" "app_server" {
@@ -209,4 +214,9 @@ output "db_name" {
 output "db_username" {
   description = "Database username"
   value       = aws_db_instance.app_db.username
+}
+
+output "private_key" {
+  value     = tls_private_key.ci_key.private_key_pem
+  sensitive = true
 }
