@@ -5,6 +5,7 @@ workflow:
     - if: '$CI_COMMIT_BRANCH == "main"'
       when: always
 #    - when: never
+#trigger
 
 stages:
   - backend
