@@ -21,6 +21,11 @@ variables:
   SSH_USER: ubuntu
   EC2_HOST: $EC2_PUBLIC_IP
   SSH_KEY: $EC2_SSH_KEY
+  DB_HOST: $DB_HOST
+  DB_DATABASE: $DB_NAME
+  DB_USERNAME: $DB_USERNAME
+  DB_PASSWORD: $DB_PASSWORD
+
 
 backend:
   stage: backend
@@ -102,7 +107,7 @@ deploy:
       docker run -d --name nss-backend \
         -e DB_CONNECTION=pgsql \
         -e DB_HOST=$DB_HOST \
-        -e DB_PORT=$DB_PORT \
+        -e DB_PORT=5432 \
         -e DB_DATABASE=$DB_NAME \
         -e DB_USERNAME=$DB_USERNAME \
         -e DB_PASSWORD=$DB_PASSWORD \
