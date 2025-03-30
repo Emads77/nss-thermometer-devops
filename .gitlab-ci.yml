@@ -49,6 +49,7 @@ backend:
       DB_CONNECTION=sqlite
       DB_DATABASE=/builds/$CI_PROJECT_PATH/backend/database/database.sqlite
       EOF
+    - touch backend/database/database.sqlite
     - php artisan migrate --force
     - mkdir -p ./tests/Unit && php artisan test --log-junit test-report.xml
   artifacts:
