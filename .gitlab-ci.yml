@@ -32,7 +32,7 @@ backend:
       - /root/.composer/cache
   before_script:
     - apt-get update && apt-get install -y git curl zip unzip libpq-dev libzip-dev libonig-dev libsqlite3-dev sqlite3
-    - docker-php-ext-install pdo pdo_mysql pdo_pgsql bcmath mbstring zip
+    - docker-php-ext-install pdo pdo_mysql pdo_pgsql bcmath mbstring zip pdo_sqlite
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
     - cd backend && composer install
   script:
