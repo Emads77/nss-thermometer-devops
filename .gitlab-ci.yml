@@ -53,13 +53,15 @@ backend-test:
       DB_CONNECTION=sqlite
       DB_DATABASE=/builds/saxionnl/hbo-ict/2.3-devops/2024-2025/exam-regular/17/backend/database/database.sqlite
       EOF
+    - mkdir -p ./database
     - touch ./database/database.sqlite
-    - php artisan migrate --force
-    - mkdir -p ./tests/Unit && php artisan test --log-junit test-report.xml
-  artifacts:
-    paths:
-      - ./backend/test-report.xml
-    expire_in: 1 week
+    - chmod -R 0777 ./database
+    - pwd && php artisan migrate --force
+
+    artifacts:
+      paths:
+        - ./backend/test-report.xml
+      expire_in: 1 week
 
 frontend:
   stage: frontend
