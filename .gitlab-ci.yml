@@ -21,6 +21,10 @@ variables:
   SSH_USER: ubuntu
   EC2_HOST: $EC2_PUBLIC_IP
   SSH_KEY: $EC2_SSH_KEY
+  DB_HOST: $DB_HOST
+  DB_DATABASE: $DB_NAME
+  DB_USERNAME: $DB_USERNAME
+  DB_PASSWORD: $DB_PASSWORD
 
 backend:
   stage: backend
@@ -91,7 +95,7 @@ deploy:
   before_script:
     - apk add --no-cache openssh docker-cli
     - mkdir -p ~/.ssh
-    - echo "$SSH_KEY" > ~/.ssh/id_rsa
+    - printf "%b" "$SSH_KEY" > ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
     - ssh-keyscan -H "$EC2_HOST" >> ~/.ssh/known_hosts
   script:
@@ -99,7 +103,16 @@ deploy:
       docker stop nss-backend || true &&
       docker rm nss-backend || true &&
       docker pull $DOCKER_IMAGE_BACKEND:latest &&
-      docker run -d --name nss-backend -p 8000:8000 $DOCKER_IMAGE_BACKEND:latest
-      "
-  only:
-    - main
+
+      docker run -d --name nss-backend \
+        -e DB_CONNECTION=pgsql \
+        -e DB_HOST=$DB_HOST \
+        -e DB_PORT=5432 \
+        -e DB_DATABASE=$DB_NAME \
+        -e DB_USERNAME=$DB_USERNAME \
+        -e DB_PASSWORD=$DB_PASSWORD \
+        -p 8000:8000 $DOCKER_IMAGE_BACKEND:latest &&
+
+      docker exec nss-backend php artisan migrate --force"
+  #only:
+   # - main
