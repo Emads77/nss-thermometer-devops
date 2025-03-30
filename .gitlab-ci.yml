@@ -30,11 +30,6 @@ variables:
 backend-test:
   stage: backend-test
   image: php:8.2-fpm
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}
-    paths:
-      - backend/vendor/              
-      - /root/.composer/cache 
   before_script:
     - apt-get update && apt-get install -y git curl zip unzip libpq-dev libzip-dev libonig-dev libsqlite3-dev sqlite3
     - docker-php-ext-install pdo pdo_mysql pdo_pgsql bcmath mbstring zip
