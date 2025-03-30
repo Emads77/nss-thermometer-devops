@@ -101,19 +101,17 @@ deploy:
     - ssh-keyscan -H "$EC2_HOST" >> ~/.ssh/known_hosts
   script:
     - ssh -o StrictHostKeyChecking=no $SSH_USER@$EC2_HOST "
-      docker stop nss-backend || true &&
-      docker rm nss-backend || true &&
-      docker pull $DOCKER_IMAGE_BACKEND:latest &&
-
-      docker run -d --name nss-backend \
-        -e DB_CONNECTION=pgsql \
-        -e DB_HOST=$DB_HOST \
-        -e DB_PORT=5432 \
-        -e DB_DATABASE=$DB_NAME \
-        -e DB_USERNAME=$DB_USERNAME \
-        -e DB_PASSWORD=$DB_PASSWORD \
-        -p 8000:8000 $DOCKER_IMAGE_BACKEND:latest &&
-
-      docker exec nss-backend php artisan migrate --force"
+        sudo docker stop nss-backend || true &&
+        sudo docker rm nss-backend || true &&
+        sudo docker pull $DOCKER_IMAGE_BACKEND:latest &&
+        sudo docker run -d --name nss-backend \
+          -e DB_CONNECTION=pgsql \
+          -e DB_HOST=$DB_HOST \
+          -e DB_PORT=5432 \
+          -e DB_DATABASE=$DB_NAME \
+          -e DB_USERNAME=$DB_USERNAME \
+          -e DB_PASSWORD=$DB_PASSWORD \
+          -p 8000:8000 $DOCKER_IMAGE_BACKEND:latest &&
+        sudo docker exec nss-backend php artisan migrate --force"
   #only:
    # - main
