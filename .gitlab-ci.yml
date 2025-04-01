@@ -91,7 +91,7 @@ backend-deploy:
      - echo "${AWS_ACCESS_KEY_ID}"
      - cd ./infra
      - terraform init
-     - terraform plan -out=tfplan -var="public_image_repo=$CI_REGISTRY_IMAGE/backend" -var="docker_image_tag=$CI_COMMIT_SHA" -var="db_password=$DB_PASSWORD" -var "aws_access_key_id=$AWS_ACCESS_KEY_ID" -var "aws_secret_access_key=$AWS_SECRET_ACCESS_KEY"
+     - terraform plan -out=tfplan -var="public_image_repo=$CI_REGISTRY_IMAGE/backend" -var="docker_image_tag=$CI_COMMIT_SHA" -var="db_password=$DB_PASSWORD" -var "aws_access_key_id=ASIAW7D3MLPDNTBK25RH" -var "aws_secret_access_key=gHcEqBwZLaMHC/xQ6UXdz62JzrP+H2TkdY73BhK4"
      - terraform apply -auto-approve tfplan
   artifacts:
     paths:
