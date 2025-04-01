@@ -96,8 +96,8 @@ backend-deploy:
     paths:
       - gitlab_env.sh
     expire_in: 15 minute
-  only:
-    - main
+  # only:
+  #   - main
 
 frontend:
   stage: frontend
