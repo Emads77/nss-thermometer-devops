@@ -83,14 +83,14 @@ backend-deploy:
     name: hashicorp/terraform:light
     entrypoint: [""]
   variables:
-    AWS_ACCESS_KEY_ID: "$AWS_ACCESS_KEY_ID"
-    AWS_SECRET_ACCESS_KEY: "$AWS_SECRET_ACCESS_KEY"
-    AWS_SESSION_TOKEN: "$AWS_SESSION_TOKEN"
+    AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
+    AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
+    AWS_SESSION_TOKEN: "${AWS_SESSION_TOKEN}"
 
   script:
-     - echo "$AWS_ACCESS_KEY_ID"
-     - echo "$AWS_SECRET_ACCESS_KEY"
-     - echo "$AWS_SESSION_TOKE"
+     - echo "${AWS_ACCESS_KEY_ID}"
+     - echo "${AWS_SECRET_ACCESS_KEY}"
+     - echo "${AWS_SESSION_TOKE}"
      - cd ./infra
      - terraform init
      - terraform plan -out=tfplan -var="public_image_repo=$CI_REGISTRY_IMAGE/backend" -var="docker_image_tag=$CI_COMMIT_SHA" -var="db_password=$DB_PASSWORD"
