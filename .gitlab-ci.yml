@@ -88,12 +88,13 @@ backend-deploy:
   script:
     - cd ./infra
     - terraform init
-    - terraform plan -out tfplan \
-        -var="public_image_repo=$CI_REGISTRY_IMAGE/backend" \
-        -var="docker_image_tag=$CI_COMMIT_SHA" \
-        -var="db_password=$DB_PASSWORD"
-
-    - terraform apply -auto-approve tfplan
+    - >
+     terraform plan
+     -out=tfplan
+     -var="public_image_repo=$CI_REGISTRY_IMAGE/backend"
+     -var="docker_image_tag=$CI_COMMIT_SHA"
+     -var="db_password=$DB_PASSWORD"
+     - terraform apply -auto-approve tfplan
   artifacts:
     paths:
       - gitlab_env.sh
