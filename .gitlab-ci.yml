@@ -73,6 +73,7 @@ frontend:
   before_script:
     - cd frontend && npm install
   script:
+    - 'echo "VITE_API_URL: http://$EC2_HOST:8000" > .env'
     - npm run build
   artifacts:
     paths:
