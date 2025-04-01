@@ -102,7 +102,7 @@ backend-deploy:
     - terraform apply -auto-approve tfplan
   artifacts:
     paths:
-      - gitlab_env.sh
+      - infra/gitlab_env.sh
     expire_in: 15 minute
   # only:
   #   - main
