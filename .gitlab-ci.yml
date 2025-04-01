@@ -82,8 +82,10 @@ backend-deploy:
   image: 
     name: hashicorp/terraform:light
     entrypoint: [""]
-  before_script:
-    - mkdir .aws && cat $AWS_ACCESS > ~/.aws/credentials
+  variables:
+    AWS_ACCESS_KEY_ID: "$AWS_ACCESS_KEY_ID"
+    AWS_SECRET_ACCESS_KEY: "$AWS_SECRET_ACCESS_KEY"
+    AWS_SESSION_TOKEN: "$AWS_SESSION_TOKEN"
 
   script:
      - cd ./infra
