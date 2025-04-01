@@ -88,9 +88,9 @@ backend-deploy:
     AWS_SESSION_TOKEN: "${AWS_SESSION_TOKEN}"
 
   script:
-     - echo "${AWS_ACCESS_KEY_ID}"
-     - echo "${AWS_SECRET_ACCESS_KEY}"
-     - echo "${AWS_SESSION_TOKE}"
+     - cat "${AWS_ACCESS_KEY_ID}"
+     - cat "${AWS_SECRET_ACCESS_KEY}"
+     - cat "${AWS_SESSION_TOKE}"
      - cd ./infra
      - terraform init
      - terraform plan -out=tfplan -var="public_image_repo=$CI_REGISTRY_IMAGE/backend" -var="docker_image_tag=$CI_COMMIT_SHA" -var="db_password=$DB_PASSWORD"
