@@ -86,6 +86,7 @@ backend-deploy:
     - export AWS_SESSION_TOKEN="$AWS_SESSION_TOKEN"
 
   script:
+    - cd ./infra
     - terraform init
     - terraform plan -out tfplan \
         -var="public_image_repo=$CI_REGISTRY_IMAGE/backend" \
