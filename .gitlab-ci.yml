@@ -87,6 +87,7 @@ backend-deploy:
     entrypoint: [""]
 
   script:
+     - mkdir -p ~/.aws
      - cat $AWS_ACCESS > ~/.aws/credentials
      - cd ./infra
      - terraform init
