@@ -26,6 +26,9 @@ variables:
   DB_DATABASE: $DB_NAME
   DB_USERNAME: $DB_USERNAME
   DB_PASSWORD: $DB_PASSWORD
+  AWS_ACCESS_KEY_ID: "$AWS_ACCESS_KEY_ID"
+  AWS_SECRET_ACCESS_KEY: "$AWS_SECRET_ACCESS_KEY"
+  AWS_SESSION_TOKEN: "$AWS_SESSION_TOKEN"
 
 backend-test:
   stage: backend-test
@@ -74,24 +77,20 @@ build_backend_image:
   script:
     - docker build -t "$DOCKER_IMAGE_BACKEND:latest" ./backend
     - docker push "$DOCKER_IMAGE_BACKEND:latest"
+  only:
+    - main
 
 backend-deploy:
   stage: backend-deploy
-  image: hashicorp/terraform:light
-
-  before_script:
-    - export AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID"
-    - export AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY"
-    - export AWS_SESSION_TOKEN="$AWS_SESSION_TOKEN"
+  image: 
+    name: hashicorp/terraform:light
+    entrypoint: [""]
 
   script:
-    - terraform init
-    - terraform plan -out tfplan \
-        -var="public_image_repo=$CI_REGISTRY_IMAGE/backend" \
-        -var="docker_image_tag=$CI_COMMIT_SHA" \
-        -var="db_password=$DB_PASSWORD"
-
-    - terraform apply -auto-approve tfplan
+     - cd ./infra
+     - terraform init
+     - terraform plan -out=tfplan -var="public_image_repo=$CI_REGISTRY_IMAGE/backend" -var="docker_image_tag=$CI_COMMIT_SHA" -var="db_password=$DB_PASSWORD"
+     - terraform apply -auto-approve tfplan
   artifacts:
     paths:
       - gitlab_env.sh
