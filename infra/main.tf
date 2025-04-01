@@ -356,3 +356,11 @@ output "alb_dns_name" {
   description = "DNS name of the public ALB"
   value       = aws_lb.app_alb.dns_name
 }
+
+resource "local_file" "gitlab_env" {
+  content  = <<EOF
+export ALB_DNS_NAME=${aws_lb.app_alb.dns_name}
+EOF
+
+  filename = "${path.module}/gitlab_env.sh"
+}
