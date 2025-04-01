@@ -86,14 +86,9 @@ backend-deploy:
     - export AWS_SESSION_TOKEN="$AWS_SESSION_TOKEN"
 
   script:
-    - cd ./infra
-    - terraform init
-    - >
-     terraform plan
-     -out=tfplan
-     -var="public_image_repo=$CI_REGISTRY_IMAGE/backend"
-     -var="docker_image_tag=$CI_COMMIT_SHA"
-     -var="db_password=$DB_PASSWORD"
+     - cd ./infra
+     - terraform init
+     - terraform plan -out=tfplan -var="public_image_repo=$CI_REGISTRY_IMAGE/backend" -var="docker_image_tag=$CI_COMMIT_SHA" -var="db_password=$DB_PASSWORD"
      - terraform apply -auto-approve tfplan
   artifacts:
     paths:
