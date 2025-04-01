@@ -1,3 +1,14 @@
+#this will make sure we are not making multiple infrustructures on each pipe run.
+terraform {
+  backend "s3" {
+    bucket         = "my-terraform-state-bucket"
+    key            = "nss-thermometer/terraform.tfstate"
+    region         = "us-east-1"
+    dynamodb_table = "my-terraform-locks"
+    encrypt        = true
+  }
+}
+
 provider "aws" {
   region = "us-east-1"
 }
@@ -93,7 +104,7 @@ resource "aws_subnet" "private_subnet_2" {
 
 
 resource "aws_eip" "nat_eip" {
-  vpc = true
+  domain = "vpc"
 }
 
 resource "aws_nat_gateway" "nat_gw" {
