@@ -29,7 +29,6 @@ variables:
   AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
   AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
   AWS_SESSION_TOKEN: $AWS_SESSION_TOKEN
-  AWS_ACCESS: $AWS_ACCESS
 
 backend-test:
   stage: backend-test
@@ -90,8 +89,6 @@ backend-deploy:
   script:
      - mkdir -p ~/.aws
      - cat $AWS_ACCESS > ~/.aws/credentials
-     - cat $AWS_ACCESS
-     - echo "------"
      - cat ~/.aws/credentials
      - aws sts get-caller-identity
      - cd ./infra
