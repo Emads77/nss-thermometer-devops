@@ -74,6 +74,8 @@ build_backend_image:
   script:
     - docker build -t "$DOCKER_IMAGE_BACKEND:latest" ./backend
     - docker push "$DOCKER_IMAGE_BACKEND:latest"
+  only:
+    - main
 
 backend-deploy:
   stage: backend-deploy
@@ -81,7 +83,7 @@ backend-deploy:
     name: hashicorp/terraform:light
     entrypoint: [""]
   before_script:
-    - cat $AWS_ACCESS > ~/.aws/credentials
+    - mkdir .aws && cat $AWS_ACCESS > ~/.aws/credentials
 
   script:
      - cd ./infra
