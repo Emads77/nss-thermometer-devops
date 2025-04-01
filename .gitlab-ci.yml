@@ -89,6 +89,7 @@ backend-deploy:
   script:
      - mkdir -p ~/.aws
      - cat $AWS_ACCESS > ~/.aws/credentials
+     - aws sts get-caller-identity
      - cd ./infra
      - terraform init
      - terraform plan -out=tfplan -var="public_image_repo=$CI_REGISTRY_IMAGE/backend" -var="docker_image_tag=$CI_COMMIT_SHA" -var="db_password=$DB_PASSWORD"
