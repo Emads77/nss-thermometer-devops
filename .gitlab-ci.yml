@@ -89,6 +89,9 @@ backend-deploy:
   script:
      - mkdir -p ~/.aws
      - cat $AWS_ACCESS > ~/.aws/credentials
+     - cat $AWS_ACCESS
+     - echo "------"
+     - cat ~/.aws/credentials
      - aws sts get-caller-identity
      - cd ./infra
      - terraform init
