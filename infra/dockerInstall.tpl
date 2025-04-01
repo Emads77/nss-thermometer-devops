@@ -1,28 +1,20 @@
 #!/bin/bash
-
 apt-get update -y
-apt-get install -y \
-    apt-transport-https \
-    ca-certificates \
-    curl \
-    gnupg \
-    lsb-release \
-    software-properties-common
-
-#Docker's official GPG key
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-
-#Docker's official APT repository
-add-apt-repository \
-   "deb [arch=$(dpkg --print-architecture)] https://download.docker.com/linux/ubuntu \
-   $(lsb_release -cs) stable"
-
-#Install Docker and Docker Compose
-apt-get update -y
-apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
-
-#Start Docker
-systemctl start docker
+apt-get install -y docker.io
 systemctl enable docker
+systemctl start docker
 
-echo "Docker and Docker Compose installed successfully."
+# Pull from public registry
+docker pull ${public_image_repo}:${docker_image_tag}
+
+# Run the container on port 8000
+docker run -d --name nss-backend -p 8000:8000 \
+  -e DB_CONNECTION=pgsql \
+  -e DB_HOST=${db_host} \
+  -e DB_PORT=5432 \
+  -e DB_DATABASE=${db_name} \
+  -e DB_USERNAME=${db_username} \
+  -e DB_PASSWORD=${db_password} \
+  ${public_image_repo}:${docker_image_tag}
+
+docker exec nss-backend php artisan migrate --force
