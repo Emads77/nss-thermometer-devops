@@ -13,6 +13,7 @@ workflow:
 stages:
   - backend
   - frontend
+  - pages
   - docker-build
   - deploy
 
@@ -77,6 +78,17 @@ frontend:
     paths:
       - frontend/dist
     expire_in: 1 week
+
+pages:
+  stage: pages
+  script:
+    - mv frontend/dist public
+  artifacts:
+    paths:
+      - public
+    expire_in: 1 week
+  only:
+    - main
 
 build_backend_image:
   stage: docker-build
