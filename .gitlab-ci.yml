@@ -26,9 +26,9 @@ variables:
   DB_DATABASE: $DB_NAME
   DB_USERNAME: $DB_USERNAME
   DB_PASSWORD: $DB_PASSWORD
-  AWS_ACCESS_KEY_ID: "$AWS_ACCESS_KEY_ID"
-  AWS_SECRET_ACCESS_KEY: "$AWS_SECRET_ACCESS_KEY"
-  AWS_SESSION_TOKEN: "$AWS_SESSION_TOKEN"
+  AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+  AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+  AWS_SESSION_TOKEN: $AWS_SESSION_TOKEN
 
 backend-test:
   stage: backend-test
@@ -87,9 +87,11 @@ backend-deploy:
     entrypoint: [""]
 
   script:
+     - echo "${AWS_SECRET_ACCESS_KEY}"
+     - echo "${AWS_ACCESS_KEY_ID}"
      - cd ./infra
      - terraform init
-     - terraform plan -out=tfplan -var="public_image_repo=$CI_REGISTRY_IMAGE/backend" -var="docker_image_tag=$CI_COMMIT_SHA" -var="db_password=$DB_PASSWORD"
+     - terraform plan -out=tfplan -var="public_image_repo=$CI_REGISTRY_IMAGE/backend" -var="docker_image_tag=$CI_COMMIT_SHA" -var="db_password=$DB_PASSWORD" -var "aws_access_key_id=ASIAW7D3MLPDNTBK25RH" -var "aws_secret_access_key=gHcEqBwZLaMHC/xQ6UXdz62JzrP+H2TkdY73BhK4"
      - terraform apply -auto-approve tfplan
   artifacts:
     paths:
