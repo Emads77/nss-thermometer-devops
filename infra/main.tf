@@ -1,3 +1,6 @@
+provider "aws" {
+  region = "us-east-1"
+}
 #this will make sure we are not making multiple infrustructures on each pipe run.
 terraform {
   backend "s3" {
@@ -7,10 +10,6 @@ terraform {
     dynamodb_table = "my-terraform-locks"
     encrypt        = true
   }
-}
-
-provider "aws" {
-  region = "us-east-1"
 }
 
 resource "aws_vpc" "app_vpc" {
