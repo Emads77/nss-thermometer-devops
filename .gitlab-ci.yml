@@ -109,6 +109,7 @@ backend-deploy:
       -backend-config="lock_method=POST" \
       -backend-config="unlock_method=DELETE" \
       -backend-config="retry_wait_min=5"
+    - terraform destroy
     - terraform plan -out=tfplan -var="public_image_repo=$CI_REGISTRY_IMAGE/backend" -var="docker_image_tag=$CI_COMMIT_SHA" -var="db_password=$DB_PASSWORD" -var="CI_JOB_TOKEN=$CI_JOB_TOKEN" -var="CI_REGISTRY=$CI_REGISTRY"
     - terraform apply -auto-approve tfplan
     
