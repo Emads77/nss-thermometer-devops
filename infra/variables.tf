@@ -39,3 +39,27 @@ variable "db_password" {
   sensitive   = true
   description = "Password for the PostgreSQL DB instance"
 }
+
+variable "public_image_repo" {
+  type        = string
+  description = "The Docker repo"
+}
+
+variable "docker_image_tag" {
+  type        = string
+  description = "Docker image tag, e.g. 'latest' or 'v1.2.3'"
+  default     = "latest"
+}
+
+
+variable "CONTAINER_TOKEN" {
+  type        = string
+}
+
+variable "CONTAINER_USERNAME" {
+  type        = string
+}
+
+variable "CI_REGISTRY" {
+  type        = string
+}

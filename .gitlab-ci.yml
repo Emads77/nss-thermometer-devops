@@ -11,11 +11,11 @@ workflow:
 #trigger
 
 stages:
-  - backend
+  - backend-test
+  - docker-build
+  - backend-deploy
   - frontend
   - pages
-  - docker-build
-  - deploy
 
 variables:
   DOCKER_IMAGE_BACKEND: "$CI_REGISTRY_IMAGE/backend"
@@ -26,9 +26,16 @@ variables:
   DB_DATABASE: $DB_NAME
   DB_USERNAME: $DB_USERNAME
   DB_PASSWORD: $DB_PASSWORD
+  AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+  AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+  AWS_SESSION_TOKEN: $AWS_SESSION_TOKEN
+  GITLAB_ACCESS_TOKEN: $GITLAB_ACCESS_TOKEN
+  CONTAINER_TOKEN: $CONTAINER_TOKEN
+  CONTAINER_USERNAME: $CONTAINER_USERNAME
+  
 
-backend:
-  stage: backend
+backend-test:
+  stage: backend-test
   image: php:8.2-fpm
   cache:
     key: ${CI_COMMIT_REF_SLUG}
@@ -61,10 +68,66 @@ backend:
     paths:
       - backend/test-report.xml
     expire_in: 1 week
+  only:
+    - main
+
+build_backend_image:
+  stage: docker-build
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin "$CI_REGISTRY"
+  script:
+    - docker build -t "$DOCKER_IMAGE_BACKEND:latest" ./backend
+    - docker push "$DOCKER_IMAGE_BACKEND:latest"
+  # only:
+  #   - main
+
+backend-deploy:
+  stage: backend-deploy
+  image:
+    name: zenika/terraform-aws-cli
+    entrypoint: [""]
+  script:
+    - mkdir -p ~/.aws
+    - |
+      cat <<EOF > ~/.aws/credentials
+      [default]
+      aws_access_key_id = $AWS_ACCESS_KEY_ID
+      aws_secret_access_key = $AWS_SECRET_ACCESS_KEY
+      aws_session_token = $AWS_SESSION_TOKEN
+      EOF
+    - cat ~/.aws/credentials
+    - aws sts get-caller-identity
+    - cd ./infra
+    - |
+      export TF_STATE_NAME=default
+      terraform init \
+      -backend-config="address=https://gitlab.com/api/v4/projects/68303238/terraform/state/$TF_STATE_NAME" \
+      -backend-config="lock_address=https://gitlab.com/api/v4/projects/68303238/terraform/state/$TF_STATE_NAME/lock" \
+      -backend-config="unlock_address=https://gitlab.com/api/v4/projects/68303238/terraform/state/$TF_STATE_NAME/lock" \
+      -backend-config="username=tavger" \
+      -backend-config="password=$GITLAB_ACCESS_TOKEN" \
+      -backend-config="lock_method=POST" \
+      -backend-config="unlock_method=DELETE" \
+      -backend-config="retry_wait_min=5"
+    - terraform destroy --auto-approve -var="public_image_repo=$CI_REGISTRY_IMAGE/backend" -var="docker_image_tag=$CI_COMMIT_SHA" -var="db_password=$DB_PASSWORD" -var="CONTAINER_TOKEN=$CONTAINER_TOKEN" -var="CONTAINER_USERNAME=$CONTAINER_USERNAME" -var="CI_REGISTRY=$CI_REGISTRY" 
+    - terraform plan -out=tfplan -var="public_image_repo=$CI_REGISTRY_IMAGE/backend" -var="docker_image_tag=$CI_COMMIT_SHA" -var="db_password=$DB_PASSWORD" -var="CONTAINER_TOKEN=$CONTAINER_TOKEN" -var="CONTAINER_USERNAME=$CONTAINER_USERNAME" -var="CI_REGISTRY=$CI_REGISTRY"
+    - terraform apply --auto-approve tfplan
+    
+  artifacts:
+    paths:
+      - infra/gitlab_env.sh
+    expire_in: 15 minute
+  # only:
+  #   - main
 
 frontend:
   stage: frontend
   image: node:18-alpine
+  dependencies:
+    - backend-deploy
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
@@ -72,8 +135,9 @@ frontend:
       - /root/.npm
   before_script:
     - cd frontend && npm install
+    - source ../infra/gitlab_env.sh
   script:
-    - 'echo "VITE_API_URL: http://$EC2_HOST:8000" > .env'
+    - echo "VITE_API_URL=http://${ALB_DNS_NAME}" > .env
     - npm run build
   artifacts:
     paths:
@@ -88,32 +152,5 @@ pages:
     paths:
       - public
     expire_in: 1 week
-  only:
-    - main
-
-build_backend_image:
-  stage: docker-build
-  image: docker:latest
-  services:
-    - docker:dind
-  before_script:
-    - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin "$CI_REGISTRY"
-  script:
-    - docker build -t "$DOCKER_IMAGE_BACKEND:latest" ./backend
-    - docker push "$DOCKER_IMAGE_BACKEND:latest"
-
-deploy:
-  stage: deploy
-  image: alpine:latest
-  before_script:
-    - apk add --no-cache openssh docker-cli
-    - mkdir -p ~/.ssh
-    - cat "$SSH_KEY"
-    - cat "$SSH_KEY" > ~/.ssh/id_rsa
-    - chmod 600 ~/.ssh/id_rsa
-    - ssh-keyscan -H "$EC2_HOST" >> ~/.ssh/known_hosts
-  script:
-      - ssh -o StrictHostKeyChecking=no $SSH_USER@$EC2_HOST "sudo docker login -u gitlab-ci-token -p \"$CI_JOB_TOKEN\" \"$CI_REGISTRY\" && sudo docker stop nss-backend || true && sudo docker rm nss-backend || true && sudo docker pull $DOCKER_IMAGE_BACKEND:latest && sudo docker run -d --name nss-backend -e DB_CONNECTION=pgsql -e DB_HOST=$DB_HOST -e DB_PORT=5432 -e DB_DATABASE=$DB_NAME -e DB_USERNAME=$DB_USERNAME -e DB_PASSWORD=$DB_PASSWORD -p 8000:8000 $DOCKER_IMAGE_BACKEND:latest && sudo docker exec nss-backend php artisan migrate --force"
-  #only:
-   # - main testt
-   
+  # only:
+  #   - main
