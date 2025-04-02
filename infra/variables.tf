@@ -51,10 +51,6 @@ variable "docker_image_tag" {
   default     = "latest"
 }
 
-variable "public_image_repo" {
-  type        = string
-  description = "The Docker repo"
-}
 
 variable "CI_JOB_TOKEN" {
   type        = string
