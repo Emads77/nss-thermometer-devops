@@ -52,7 +52,11 @@ variable "docker_image_tag" {
 }
 
 
-variable "CI_JOB_TOKEN" {
+variable "CONTAINER_TOKEN" {
+  type        = string
+}
+
+variable "CONTAINER_USERNAME" {
   type        = string
 }
 

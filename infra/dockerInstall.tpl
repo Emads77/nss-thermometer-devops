@@ -5,7 +5,7 @@ systemctl enable docker
 systemctl start docker
 
 
-echo ${CI_JOB_TOKEN} | docker login -u gitlab-ci-token --password-stdin ${CI_REGISTRY}
+echo ${CONTAINER_TOKEN} | docker login -u ${CONTAINER_USERNAME} --password-stdin ${CI_REGISTRY}
 # Pull from public registry
 docker pull ${public_image_repo}:${docker_image_tag}
 

@@ -305,7 +305,8 @@ resource "aws_launch_template" "app_launch_template" {
     db_name           = aws_db_instance.app_db.db_name,
     db_username       = aws_db_instance.app_db.username,
     db_password       = var.db_password
-    CI_JOB_TOKEN      = var.CI_JOB_TOKEN 
+    CONTAINER_TOKEN      = var.CONTAINER_TOKEN
+    CONTAINER_USERNAME = var.CONTAINER_USERNAME
     CI_REGISTRY       = var.CI_REGISTRY
   }))
 
