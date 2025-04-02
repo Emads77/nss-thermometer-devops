@@ -112,8 +112,7 @@ backend-deploy:
       -backend-config="lock_method=POST" \
       -backend-config="unlock_method=DELETE" \
       -backend-config="retry_wait_min=5"
-    - terraform destroy --auto-approve -var="public_image_repo=$CI_REGISTRY_IMAGE/backend" -var="docker_image_tag=$CI_COMMIT_SHA" -var="db_password=$DB_PASSWORD" -var="CONTAINER_TOKEN=$CONTAINER_TOKEN" -var="CONTAINER_USERNAME=$CONTAINER_USERNAME" -var="CI_REGISTRY=$CI_REGISTRY" 
-    - terraform plan -out=tfplan -var="public_image_repo=$CI_REGISTRY_IMAGE/backend" -var="docker_image_tag=$CI_COMMIT_SHA" -var="db_password=$DB_PASSWORD" -var="CONTAINER_TOKEN=$CONTAINER_TOKEN" -var="CONTAINER_USERNAME=$CONTAINER_USERNAME" -var="CI_REGISTRY=$CI_REGISTRY"
+    - terraform plan -out=tfplan -var="public_image_repo=$DOCKER_IMAGE_BACKEND" -var="docker_image_tag=latest" -var="db_password=$DB_PASSWORD" -var="CONTAINER_TOKEN=$CONTAINER_TOKEN" -var="CONTAINER_USERNAME=$CONTAINER_USERNAME" -var="CI_REGISTRY=$CI_REGISTRY"
     - terraform apply --auto-approve tfplan
     
   artifacts:
