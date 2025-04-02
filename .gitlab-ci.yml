@@ -29,6 +29,7 @@ variables:
   AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
   AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
   AWS_SESSION_TOKEN: $AWS_SESSION_TOKEN
+  GITLAB_ACCESS_TOKEN: $GITLAB_ACCESS_TOKEN
 
 backend-test:
   stage: backend-test
@@ -108,7 +109,17 @@ backend-deploy:
       else
         echo "No previous artifact found for $CI_COMMIT_REF_NAME"
       fi
-    - terraform init
+    - |
+      export TF_STATE_NAME=default
+      terraform init \
+      -backend-config="address=https://gitlab.com/api/v4/projects/68303238/terraform/state/$TF_STATE_NAME" \
+      -backend-config="lock_address=https://gitlab.com/api/v4/projects/68303238/terraform/state/$TF_STATE_NAME/lock" \
+      -backend-config="unlock_address=https://gitlab.com/api/v4/projects/68303238/terraform/state/$TF_STATE_NAME/lock" \
+      -backend-config="username=tavger" \
+      -backend-config="password=$GITLAB_ACCESS_TOKEN" \
+      -backend-config="lock_method=POST" \
+      -backend-config="unlock_method=DELETE" \
+      -backend-config="retry_wait_min=5"
     - terraform plan -out=tfplan -var="public_image_repo=$CI_REGISTRY_IMAGE/backend" -var="docker_image_tag=$CI_COMMIT_SHA" -var="db_password=$DB_PASSWORD"
     - terraform apply -auto-approve tfplan
     - cp terraform.tfstate tfstate.artifact
