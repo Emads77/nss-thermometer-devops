@@ -78,8 +78,8 @@ build_backend_image:
   script:
     - docker build -t "$DOCKER_IMAGE_BACKEND:latest" ./backend
     - docker push "$DOCKER_IMAGE_BACKEND:latest"
-  only:
-    - main
+  # only:
+  #   - main
 
 backend-deploy:
   stage: backend-deploy
@@ -131,7 +131,7 @@ frontend:
       - /root/.npm
   before_script:
     - cd frontend && npm install
-    - source ../gitlab_env.sh
+    - source ../infra/gitlab_env.sh
   script:
     - echo "VITE_API_URL=http://${ALB_DNS_NAME}" > .env
     - npm run build
