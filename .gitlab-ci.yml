@@ -98,12 +98,6 @@ backend-deploy:
     - cat ~/.aws/credentials
     - aws sts get-caller-identity
     - cd ./infra
-    - if [ -f tfstate.artifact ]; then 
-        echo "Found previous artifact from $CI_COMMIT_REF_NAME"
-        mv tfstate.artifact terraform.tfstate
-      else
-        echo "No previous artifact found for $CI_COMMIT_REF_NAME"
-      fi
     - |
       export TF_STATE_NAME=default
       terraform init \
