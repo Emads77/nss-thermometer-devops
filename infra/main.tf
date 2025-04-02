@@ -1,16 +1,6 @@
 provider "aws" {
   region = "us-east-1"
 }
-#this will make sure we are not making multiple infrustructures on each pipe run.
-terraform {
-  backend "s3" {
-    bucket         = "my-terraform-state-bucket"
-    key            = "nss-thermometer/terraform.tfstate"
-    region         = "us-east-1"
-    dynamodb_table = "my-terraform-locks"
-    encrypt        = true
-  }
-}
 
 resource "aws_vpc" "app_vpc" {
   cidr_block       = "10.0.0.0/16"
