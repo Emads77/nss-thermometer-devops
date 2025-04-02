@@ -85,6 +85,11 @@ backend-deploy:
   image:
     name: zenika/terraform-aws-cli
     entrypoint: [""]
+  needs:
+    - project: $CI_PROJECT_PATH
+      job: terraform_deploy
+      ref: $CI_COMMIT_REF_NAME
+      artifacts: true
   script:
     - mkdir -p ~/.aws
     - |
@@ -97,11 +102,20 @@ backend-deploy:
     - cat ~/.aws/credentials
     - aws sts get-caller-identity
     - cd ./infra
+    - if [ -f tfstate.artifact ]; then 
+        echo "Found previous artifact from $CI_COMMIT_REF_NAME"
+        mv tfstate.artifact terraform.tfstate
+      else
+        echo "No previous artifact found for $CI_COMMIT_REF_NAME"
+      fi
     - terraform init
     - terraform plan -out=tfplan -var="public_image_repo=$CI_REGISTRY_IMAGE/backend" -var="docker_image_tag=$CI_COMMIT_SHA" -var="db_password=$DB_PASSWORD"
     - terraform apply -auto-approve tfplan
+    - cp terraform.tfstate tfstate.artifact
+    
   artifacts:
     paths:
+      - tfstate.artifact
       - infra/gitlab_env.sh
     expire_in: 15 minute
   # only:
