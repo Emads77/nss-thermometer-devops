@@ -86,11 +86,6 @@ backend-deploy:
   image:
     name: zenika/terraform-aws-cli
     entrypoint: [""]
-  needs:
-    - project: $CI_PROJECT_PATH
-      job: terraform_deploy
-      ref: $CI_COMMIT_REF_NAME
-      artifacts: true
   script:
     - mkdir -p ~/.aws
     - |
@@ -122,11 +117,9 @@ backend-deploy:
       -backend-config="retry_wait_min=5"
     - terraform plan -out=tfplan -var="public_image_repo=$CI_REGISTRY_IMAGE/backend" -var="docker_image_tag=$CI_COMMIT_SHA" -var="db_password=$DB_PASSWORD"
     - terraform apply -auto-approve tfplan
-    - cp terraform.tfstate tfstate.artifact
     
   artifacts:
     paths:
-      - tfstate.artifact
       - infra/gitlab_env.sh
     expire_in: 15 minute
   # only:
