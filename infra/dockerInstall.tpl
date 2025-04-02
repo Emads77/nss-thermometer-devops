@@ -4,6 +4,8 @@ apt-get install -y docker.io
 systemctl enable docker
 systemctl start docker
 
+
+docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CI_REGISTRY}
 # Pull from public registry
 docker pull ${public_image_repo}:${docker_image_tag}
 

@@ -50,3 +50,16 @@ variable "docker_image_tag" {
   description = "Docker image tag, e.g. 'latest' or 'v1.2.3'"
   default     = "latest"
 }
+
+variable "public_image_repo" {
+  type        = string
+  description = "The Docker repo"
+}
+
+variable "CI_JOB_TOKEN" {
+  type        = string
+}
+
+variable "CI_REGISTRY" {
+  type        = string
+}
