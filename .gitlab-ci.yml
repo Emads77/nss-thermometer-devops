@@ -78,8 +78,8 @@ build_backend_image:
   script:
     - docker build -t "$DOCKER_IMAGE_BACKEND:latest" ./backend
     - docker push "$DOCKER_IMAGE_BACKEND:latest"
-  # only:
-  #   - main
+  only:
+    - main
 
 backend-deploy:
   stage: backend-deploy
