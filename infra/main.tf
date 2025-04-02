@@ -301,7 +301,7 @@ resource "aws_launch_template" "app_launch_template" {
   user_data = base64encode(templatefile("${path.module}/dockerInstall.tpl", {
     public_image_repo = var.public_image_repo,
     docker_image_tag  = var.docker_image_tag,
-    db_host           = aws_db_instance.app_db.endpoint,
+    db_host           = element(split(":", aws_db_instance.app_db.endpoint), 0),
     db_name           = aws_db_instance.app_db.db_name,
     db_username       = aws_db_instance.app_db.username,
     db_password       = var.db_password
