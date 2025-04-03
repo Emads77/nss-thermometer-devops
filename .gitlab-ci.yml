@@ -14,7 +14,7 @@ stages:
   - backend-test
   - docker-build
   - backend-deploy
-  - Seeding-app
+  - seeding-app
   - frontend
   - pages
 
@@ -135,6 +135,7 @@ seeding-app:
     - export BACKEND_URL=https://${ALB_DNS_NAME}
     - chmod +x add_data.sh
     - ./add_data.sh data.md
+
 frontend:
   stage: frontend
   image: node:18-alpine
