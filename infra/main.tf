@@ -137,8 +137,8 @@ resource "aws_security_group" "alb_sg" {
 
   ingress {
     description = "Allow inbound HTTPS"
-    from_port   = 443
-    to_port     = 443
+    from_port   = 80
+    to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -245,7 +245,7 @@ resource "aws_lb_target_group" "app_tg" {
 
 resource "aws_lb_listener" "app_listener" {
   load_balancer_arn = aws_lb.app_alb.arn
-  port              = "443"
+  port              = "80"
   protocol          = "HTTPS"
 
   default_action {
