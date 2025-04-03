@@ -132,7 +132,8 @@ seeding-app:
     - source ./infra/gitlab_env.sh
   script:
     - cd ./seed-application
-    - export BACKEND_URL=https://${ALB_DNS_NAME}
+    - export BACKEND_URL=http://${ALB_DNS_NAME}
+    - BACKEND_URL
     - chmod +x add_data.sh
     - ./add_data.sh data.md
 
@@ -150,7 +151,7 @@ frontend:
     - cd frontend && npm install
     - source ../infra/gitlab_env.sh
   script:
-    - echo "VITE_API_URL=https://${ALB_DNS_NAME}" > .env
+    - echo "VITE_API_URL=http://${ALB_DNS_NAME}" > .env
     - npm run build
   artifacts:
     paths:
