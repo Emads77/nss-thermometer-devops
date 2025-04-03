@@ -124,7 +124,7 @@ backend-deploy:
   #   - main
 seeding-app:
   stage: seeding-app
-  image: alpine:latest
+  image: ubuntu:latest
   dependencies:
     - backend-deploy
   before_script:
