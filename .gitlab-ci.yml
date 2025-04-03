@@ -50,7 +50,7 @@ backend-test:
     - cd backend && composer install
   script:
     - |
-      cat <<EOF > ~/.env
+      cat <<EOF > .env
       APP_NAME=NSSThermometerBackend
       APP_ENV=local
       APP_KEY=base64:zYgRkEuotrmHIkGQlAUY/VvTKOUSjjpWF7DLco5vRok=
@@ -62,6 +62,7 @@ backend-test:
       DB_CONNECTION=sqlite
       DB_DATABASE=/builds/saxionnl/hbo-ict/2.3-devops/2024-2025/exam-regular/17/backend/database/database.sqlite
       EOF
+    - source .env
     - touch ./database/database.sqlite
     - php artisan migrate --force
     - mkdir -p ./tests/Unit && php artisan test --log-junit test-report.xml
