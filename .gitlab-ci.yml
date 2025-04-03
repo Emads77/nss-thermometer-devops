@@ -133,7 +133,7 @@ seeding-app:
   script:
     - cd ./seed-application
     - export BACKEND_URL=http://${ALB_DNS_NAME}
-    - BACKEND_URL
+    - echo BACKEND_URL
     - chmod +x add_data.sh
     - ./add_data.sh data.md
 
