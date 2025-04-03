@@ -14,6 +14,7 @@ stages:
   - backend-test
   - docker-build
   - backend-deploy
+  - Seeding-app
   - frontend
   - pages
 
@@ -112,7 +113,6 @@ backend-deploy:
       -backend-config="lock_method=POST" \
       -backend-config="unlock_method=DELETE" \
       -backend-config="retry_wait_min=5"
-    - terraform destroy --auto-approve -var="public_image_repo=$DOCKER_IMAGE_BACKEND" -var="docker_image_tag=latest" -var="db_password=$DB_PASSWORD" -var="CONTAINER_TOKEN=$CONTAINER_TOKEN" -var="CONTAINER_USERNAME=$CONTAINER_USERNAME" -var="CI_REGISTRY=$CI_REGISTRY"
     - terraform plan -out=tfplan -var="public_image_repo=$DOCKER_IMAGE_BACKEND" -var="docker_image_tag=latest" -var="db_password=$DB_PASSWORD" -var="CONTAINER_TOKEN=$CONTAINER_TOKEN" -var="CONTAINER_USERNAME=$CONTAINER_USERNAME" -var="CI_REGISTRY=$CI_REGISTRY"
     - terraform apply --auto-approve tfplan
     
@@ -122,7 +122,19 @@ backend-deploy:
     expire_in: 15 minute
   # only:
   #   - main
-
+seeding-app:
+  stage: seeding-app
+  image: curlimages/curl
+  dependencies:
+    - backend-deploy
+  before_script:
+    - apt-get update && apt-get install -y curl bash && apt-get clean
+    - source ./infra/gitlab_env.sh
+  script:
+    - cd ./seed-application
+    - export BACKEND_URL=https://${ALB_DNS_NAME}
+    - chmod +x add_data.sh
+    - ./add_data.sh data.md
 frontend:
   stage: frontend
   image: node:18-alpine
@@ -137,7 +149,7 @@ frontend:
     - cd frontend && npm install
     - source ../infra/gitlab_env.sh
   script:
-    - echo "VITE_API_URL=http://${ALB_DNS_NAME}" > .env
+    - echo "VITE_API_URL=https://${ALB_DNS_NAME}" > .env
     - npm run build
   artifacts:
     paths:
