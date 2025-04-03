@@ -50,7 +50,7 @@ backend-test:
     - cd backend && composer install
   script:
     - |
-      cat > .env <<EOF
+      cat <<EOF > ~/.env
       APP_NAME=NSSThermometerBackend
       APP_ENV=local
       APP_KEY=base64:zYgRkEuotrmHIkGQlAUY/VvTKOUSjjpWF7DLco5vRok=
