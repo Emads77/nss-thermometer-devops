@@ -9,10 +9,24 @@ by Tavgar El Ahmed & Emad Sawan
 
 #### Solution Description
 
+- [Requirement 1: Adding Data to the Backend](requirement1.md)
+
+
 ---
 
 ### 2. Containerization of the Applications
 
+## Overview
+
+For this requirement, the goal was to containerize the entire NSS Thermometer application, which includes:
+- **Backend:** A Laravel application.
+- **Frontend:** A static web application served by Nginx.
+- **Database:** A PostgreSQL instance.
+- **Seeder Script:** A script to seed the backend with initial data.
+
+Containerization is achieved using **Docker** and orchestrated with **Docker Compose**. This approach ensures that the application is portable, scalable, and easy to manage, while also allowing us to leverage environment variables for flexible configuration.
+
+---
 #### Docker & Docker Compose Setup
 
 #### Environment Variables & Configuration
