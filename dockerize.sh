@@ -8,10 +8,7 @@
 # TODO: Please write a working bash script here
 
 
-#!/bin/bash
-#
-# manage_containers.sh
-#
+
 # This script provides a convenient way to manage the Docker containers for the NSS Thermometer application.
 #
 # Usage:
@@ -22,6 +19,17 @@
 
 if [ "$#" -eq 0 ]; then
   echo "Usage: $0 {build|run|stop}"
+  exit 1
+fi
+
+# Check if Docker and Docker Compose are installed
+if ! command -v docker >/dev/null 2>&1; then
+  echo "Error: Docker is not installed."
+  exit 1
+fi
+
+if ! command -v docker-compose >/dev/null 2>&1; then
+  echo "Error: Docker Compose is not installed."
   exit 1
 fi
 
