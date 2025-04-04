@@ -101,11 +101,20 @@ The **frontend Dockerfile** uses a two-stage build:
 
 ### Seeder Container
 
-The **seeder Dockerfile** is built from a Debian slim image:
-- **Setup:**
-    - Installs necessary tools (`curl` and `bash`).
-    - Copies the `add_data.sh` script and `data.md` file.
-    - Sets the `BACKEND_URL` environment variable to point to the backend service.
+The seeder Dockerfile is built from a Debian slim image. It sets up the environment needed to run the seeding script that populates the backend with initial data.
+
+**Setup:**
+
+-   **Tools Installation:**  
+    The Dockerfile installs necessary tools such as `curl` and `bash` using `apt-get`. These are required to execute the seeding script and perform HTTP requests to the backend.
+
+-   **File Copying:**  
+    It copies the `add_data.sh` script and the `data.md` file into the container’s working directory, which is set to `/app`.
+
+-   **Environment Variable:**  
+    An environment variable, `BACKEND_URL`, is set to `http://backend:8000` as a default value.
+
+    -   _Note:_ This value is hardcoded in the Dockerfile for convenience. However, it can easily be overridden using external mechanisms such as Docker Compose or the `-e` flag with `docker run`. This makes the REST endpoint configurable without needing to modify the Dockerfile itself.
 - **CMD:** Executes the seeding script.
 
 ```dockerfile
@@ -148,9 +157,8 @@ A Bash script is planned to simplify the following tasks:
 - **Run:** Start all containers via Docker Compose.
 - **Stop:** Gracefully stop the running containers.
 
-*Note:* Temporary files created outside of Docker are excluded from images using a `.dockerignore` file (not detailed here but included in the repository). This ensures that only the necessary files are copied into each container.
 
-The script (to be implemented) will use Docker Compose commands such as:
+The script will use Docker Compose commands such as:
 - `docker-compose build`
 - `docker-compose up -d`
 - `docker-compose down`
