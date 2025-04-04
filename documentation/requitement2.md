@@ -206,10 +206,6 @@ By following these practices, the application is both modular and maintainable, 
 - [Docker Compose Documentation](https://docs.docker.com/compose/)
 - [Nginx Documentation](https://nginx.org/en/docs/)
 - [Laravel Deployment Guide](https://laravel.com/docs/deployment)
-- *(Add any additional references used during implementation)*
 
 ```
 
----
-
-This documentation clearly outlines your containerization strategy, explains your design decisions, and provides context for how the various Dockerfiles, Docker Compose configuration, and environment variables work together. It’s structured, detailed, and should be understandable by your teacher during the assessment.

@@ -6,3 +6,58 @@
 #  stop  - Stop the container(s)
 
 # TODO: Please write a working bash script here
+
+
+#!/bin/bash
+#
+# manage_containers.sh
+#
+# This script provides a convenient way to manage the Docker containers for the NSS Thermometer application.
+#
+# Usage:
+#   ./manage_containers.sh build   - Build Docker images for all services
+#   ./manage_containers.sh run     - Start the application containers in detached mode
+#   ./manage_containers.sh stop    - Stop and remove the application containers
+#
+
+if [ "$#" -eq 0 ]; then
+  echo "Usage: $0 {build|run|stop}"
+  exit 1
+fi
+
+COMMAND="$1"
+
+case "$COMMAND" in
+  build)
+    echo "Building Docker images..."
+    docker-compose build
+    if [ $? -ne 0 ]; then
+      echo "Error: Docker build failed."
+      exit 1
+    fi
+    echo "Docker images built successfully."
+    ;;
+  run)
+    echo "Starting Docker containers..."
+    docker-compose up -d
+    if [ $? -ne 0 ]; then
+      echo "Error: Failed to start Docker containers."
+      exit 1
+    fi
+    echo "Docker containers are now running."
+    ;;
+  stop)
+    echo "Stopping Docker containers..."
+    docker-compose down
+    if [ $? -ne 0 ]; then
+      echo "Error: Failed to stop Docker containers."
+      exit 1
+    fi
+    echo "Docker containers have been stopped and removed."
+    ;;
+  *)
+    echo "Invalid command: $COMMAND"
+    echo "Usage: $0 {build|run|stop}"
+    exit 1
+    ;;
+esac

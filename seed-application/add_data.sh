@@ -6,6 +6,12 @@ if [ $# -eq 0 ]; then
   exit 1
 fi
 
+# Check if the file exists
+if [ ! -f "$1" ]; then
+  echo "Error: File $1 does not exist"
+  exit 1
+fi
+
 if [ -z "${BACKEND_URL:-}" ]; then
   echo "Error: BACKEND_URL environment variable not set."
   echo "Example: export BACKEND_URL=http://localhost:8000"
