@@ -36,6 +36,14 @@ Containerization is achieved using **Docker** and orchestrated with **Docker Com
 
 ### 3. Continuous Integration (CI)
 
+The Continuous Integration (CI) pipeline is structured into two 
+main phases: Backend Testing, 
+and Frontend Building and Artifact Storage. 
+The goal of these phases is to streamline and automate the testing, 
+building, and deployment processes efficiently.
+
+- [Requirement 3: Continuous Integration](requirement3.md)
+
 #### CI Pipeline Phases
 
 #### Artefact Management
