@@ -51,15 +51,9 @@ building, and deployment processes efficiently.
 
 - [Requirement 4: Initial AWS Infrastructure with Terraform](requirement4.md)
 
----
-
 ### 5. Continuous Deployment (CD)
 
-#### Deployment Automation
-
-#### Gitlab CI/CD Integration
-
-#### Static Website Hosting
+- [Requirement 5: Continuous Deployment (CD)](requirement5.md)
 
 ---
 
