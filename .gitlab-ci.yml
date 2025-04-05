@@ -33,6 +33,7 @@ variables:
   CONTAINER_TOKEN: $CONTAINER_TOKEN
   CONTAINER_USERNAME: $CONTAINER_USERNAME
   
+#test
 
 backend-test:
   stage: backend-test
