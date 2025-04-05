@@ -44,17 +44,11 @@ building, and deployment processes efficiently.
 
 - [Requirement 3: Continuous Integration](requirement3.md)
 
-#### CI Pipeline Phases
-
-#### Artefact Management
-
 ---
 
-### 4. AWS Infrastructure with Terraform
+### 4. Initial AWS Infrastructure with Terraform
 
-#### Infrastructure Setup
-
-#### Technical Choices & Reasoning
+- [Requirement 4: Initial AWS Infrastructure with Terraform](requirement4.md)
 
 ---
 
