@@ -1,6 +1,6 @@
 # Initial AWS Infrastructure with Terraform
 
-![Infra-diagram](images/1.png){ width=200px }
+![Infra-diagram](images/1.png){ width=450px }
 
 
 We began the implementation of our cloud infrastructure by specifying the AWS region as `us-east-1`, the only region provided by our educational AWS lab.
