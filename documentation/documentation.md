@@ -26,12 +26,11 @@ For this requirement, the goal was to containerize the entire NSS Thermometer ap
 
 Containerization is achieved using **Docker** and orchestrated with **Docker Compose**. This approach ensures that the application is portable, scalable, and easy to manage, while also allowing us to leverage environment variables for flexible configuration.
 
----
-#### Docker & Docker Compose Setup
+#### Solution Description
 
-#### Environment Variables & Configuration
 
-#### Health Checks & Container Boot Order
+- [Requirement 2: Containerization of the applications](requirement2.md)
+
 
 ---
 

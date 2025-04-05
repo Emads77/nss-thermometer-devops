@@ -1,21 +1,4 @@
 #!/bin/bash
-#
-# Usage:
-#  build - Create docker container(s) for the application
-#  run   - Run the application as container(s)
-#  stop  - Stop the container(s)
-
-# TODO: Please write a working bash script here
-
-
-
-# This script provides a convenient way to manage the Docker containers for the NSS Thermometer application.
-#
-# Usage:
-#   ./manage_containers.sh build   - Build Docker images for all services
-#   ./manage_containers.sh run     - Start the application containers in detached mode
-#   ./manage_containers.sh stop    - Stop and remove the application containers
-#
 
 if [ "$#" -eq 0 ]; then
   echo "Usage: $0 {build|run|stop}"
