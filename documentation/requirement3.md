@@ -31,7 +31,7 @@ To speed up the building process, we cached these directories:
 
 Since the frontend is built using `Node.js`, we chose the minimal `node:18-alpine` Docker image, which includes Node.js pre-installed.
 
-Prior to frontend building, we modified the backend code by removing the hardcoded backend URL and replacing it with an environment variable. Currently, the frontend build depends on backend deployment. Although mixing deployment and integration isn't ideal, the educational AWS lab environment imposes that beacuse on each run it is possible to get a different ALB DNS.
+Prior to frontend building, we modified the frontend code by removing the hardcoded backend URL and replacing it with an environment variable. Currently, the frontend build depends on backend deployment to get `backend URL` variable. Although mixing deployment and integration isn't ideal, the educational AWS lab environment imposes that beacuse on each run it is possible to get a different ALB DNS.
 
 A more ideal solution would involve using a static DNS pointing to the backend. However, we still need to add more automation steps especially to the backend configuration which might make us end up with long and complicated automation pipelines, we accepted our current method.
 
