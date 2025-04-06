@@ -77,15 +77,3 @@ We extended our Terraform configuration to deploy a highly available backend and
 
 **Solution Description:**
 - **Reference:** [Requirement 7: backend with high availability ](requirement7.md)
-
-## References
-
-*(Include your references here)*
-
----
-
-## Additional Notes
-
-*(Include any extra notes or comments here)*
-
----
