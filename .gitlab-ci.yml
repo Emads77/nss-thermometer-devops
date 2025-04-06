@@ -5,7 +5,7 @@ workflow:
     - if: '$CI_COMMIT_BRANCH == "main"'
       when: always
     - when: never
-##
+
 stages:
   - backend-test
   - docker-build
@@ -29,8 +29,7 @@ variables:
   GITLAB_ACCESS_TOKEN: $GITLAB_ACCESS_TOKEN
   CONTAINER_TOKEN: $CONTAINER_TOKEN
   CONTAINER_USERNAME: $CONTAINER_USERNAME
-  
-#test
+
 
 backend-test:
   stage: backend-test
