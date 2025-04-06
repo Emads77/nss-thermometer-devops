@@ -136,6 +136,8 @@ seeding-app:
     - echo BACKEND_URL
     - chmod +x add_data.sh
     - ./add_data.sh data.md
+  only:
+    - main
 
 frontend:
   stage: frontend
@@ -157,6 +159,8 @@ frontend:
     paths:
       - frontend/dist
     expire_in: 1 week
+  only:
+    - main
 
 pages:
   stage: pages
