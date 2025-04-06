@@ -4,9 +4,6 @@ workflow:
       when: always
     - if: '$CI_COMMIT_BRANCH == "main"'
       when: always
-
-    - if: '$CI_COMMIT_BRANCH'
-      when: always
     - when: never
 
 stages:
