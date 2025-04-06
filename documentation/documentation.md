@@ -1,5 +1,6 @@
+
 # Exam Assignment DevOps — NSS Thermometer
-by Tavgar El Ahmed & Emad Sawan
+*by Tavgar El Ahmed & Emad Sawan*
 
 ---
 
@@ -7,69 +8,84 @@ by Tavgar El Ahmed & Emad Sawan
 
 ### 1. Add Data to the Backend
 
-#### Solution Description
-
-- [Requirement 1: Adding Data to the Backend](requirement1.md)
-
+**Solution Description:**  
+For this requirement, we implemented a Bash script (`add_data.sh`) that reads a data file (`data.md`) and performs POST requests to seed the Laravel backend with goals.
+- **Reference:** [Requirement 1: Adding Data to the Backend](requirement1.md)
 
 ---
 
 ### 2. Containerization of the Applications
 
-## Overview
-
-For this requirement, the goal was to containerize the entire NSS Thermometer application, which includes:
+**Overview:**  
+The goal was to containerize the entire NSS Thermometer application, which consists of:
 - **Backend:** A Laravel application.
 - **Frontend:** A static web application served by Nginx.
 - **Database:** A PostgreSQL instance.
 - **Seeder Script:** A script to seed the backend with initial data.
 
-Containerization is achieved using **Docker** and orchestrated with **Docker Compose**. This approach ensures that the application is portable, scalable, and easy to manage, while also allowing us to leverage environment variables for flexible configuration.
+**Approach:**  
+Containerization is achieved using Docker and orchestrated with Docker Compose. This setup ensures portability, scalability, and ease of management, while allowing flexible configuration via environment variables.
 
-#### Solution Description
-
-
-- [Requirement 2: Containerization of the applications](requirement2.md)
-
+**Solution Description:**
+- **Reference:** [Requirement 2: Containerization of the applications](requirement2.md)
 
 ---
 
 ### 3. Continuous Integration (CI)
 
-The Continuous Integration (CI) pipeline is structured into two 
-main phases: Backend Testing, 
-and Frontend Building and Artifact Storage. 
-The goal of these phases is to streamline and automate the testing, 
-building, and deployment processes efficiently.
+**Overview:**  
+The CI pipeline is structured into two main phases:
+- **Backend Testing:** Automated testing of the backend application.
+- **Frontend Building and Artifact Storage:** Building the frontend application and storing the build artifacts for deployment.
 
-- [Requirement 3: Continuous Integration](requirement3.md)
+**Goal:**  
+To streamline and automate testing, building, and deployment processes.
+
+**Solution Description:**
+- **Reference:** [Requirement 3: Continuous Integration](requirement3.md)
 
 ---
 
 ### 4. Initial AWS Infrastructure with Terraform
 
-- [Requirement 4: Initial AWS Infrastructure with Terraform](requirement4.md)
+**Overview:**  
+We set up the initial AWS infrastructure using Terraform. This infrastructure provides the foundation for deploying our application to the cloud.
+
+**Solution Description:**
+- **Reference:** [Requirement 4: Initial AWS Infrastructure with Terraform](requirement4.md)
+
+---
 
 ### 5. Continuous Deployment (CD)
 
-- [Requirement 5: Continuous Deployment (CD)](requirement5.md)
+**Overview:**  
+Continuous Deployment is automated via our GitLab CI/CD pipeline. On every push to the main branch, the pipeline:
+- Builds the necessary Docker images.
+- Uploads images to the GitLab container registry.
+- Connects via SSH to deploy and run the images on the EC2 instance.
+- Deploys the frontend as a static website.
+
+**Solution Description:**
+- **Reference:** [Requirement 5: Continuous Deployment (CD)](requirement5.md)
 
 ---
 
-### 6. High Availability Backend
+### 7. High Availability Backend
 
-#### HA Configuration & Terraform
+**Overview:**  
+We extended our Terraform configuration to deploy a highly available backend and a redundant database. This ensures that the backend remains accessible and resilient, even in case of failures.
 
-#### Database Redundancy
-
-#### Network & Security
-
----
+**Solution Description:**
+- **Reference:** [Requirement 7: backend with high availability ](requirement7.md)
 
 ## References
 
+*(Include your references here)*
 
 ---
 
 ## Additional Notes
 
+*(Include any extra notes or comments here)*
+
+---

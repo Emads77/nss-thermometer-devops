@@ -109,6 +109,10 @@ To fully automate our pipeline, Terraform outputs the ALB DNS, which we save as 
 
 ### Using AWS S3 Bucket
 
+Initially, for our project, we aimed to deploy our static frontend using an S3 bucket. We chose this approach because it aligned well with our overall AWS-based architecture, promising high availability and easy integration with other AWS services we were using. Additionally, hosting on S3 would have allowed us greater control over custom domains and SSL configurations for our frontend.
+
+However, while trying to automate the deployment via our CI/CD pipeline, we encountered permission issues. Our educational AWS account didn't have the necessary privileges to create an IAM user with the required permissions to access S3 and generate the proper access keys. Due to these constraints, we switched to GitLab Pages, which is natively integrated into our CI/CD process and doesn't require additional AWS credentials.
+
 ### Using GitLab Pages
 
 We updated the `frontend-build` step to accept and use `infra/gitlab_env.sh` as environment variables. This ensures it always uses the correct ALB DNS, especially useful as our educational AWS lab infrastructure might change each run:
