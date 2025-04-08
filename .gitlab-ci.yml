@@ -13,7 +13,7 @@ stages:
   - seeding-app
   - frontend
   - pages
-
+#
 variables:
   DOCKER_IMAGE_BACKEND: "$CI_REGISTRY_IMAGE/backend"
   SSH_USER: ubuntu
