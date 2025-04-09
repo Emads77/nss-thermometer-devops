@@ -13,6 +13,7 @@ stages:
   - seeding-app
   - frontend
   - pages
+  - destroy
 
 variables:
   DOCKER_IMAGE_BACKEND: "$CI_REGISTRY_IMAGE/backend"
@@ -119,6 +120,7 @@ backend-deploy:
     expire_in: 15 minute
   only:
     - main
+
 seeding-app:
   stage: seeding-app
   image: ubuntu:latest
@@ -167,5 +169,40 @@ pages:
     paths:
       - public
     expire_in: 1 week
+  only:
+    - main
+
+
+destroy-infrastructure:
+  stage: destroy
+  image: zenika/terraform-aws-cli
+  script:
+    - mkdir -p ~/.aws
+    - |
+      cat <<EOF > ~/.aws/credentials
+      [default]
+      aws_access_key_id = $AWS_ACCESS_KEY_ID
+      aws_secret_access_key = $AWS_SECRET_ACCESS_KEY
+      aws_session_token = $AWS_SESSION_TOKEN
+      EOF
+    - aws sts get-caller-identity
+    - cd infra
+    - terraform init \
+      -backend-config="address=https://gitlab.com/api/v4/projects/68303238/terraform/state/default" \
+      -backend-config="lock_address=https://gitlab.com/api/v4/projects/68303238/terraform/state/default/lock" \
+      -backend-config="unlock_address=https://gitlab.com/api/v4/projects/68303238/terraform/state/default/lock" \
+      -backend-config="username=tavger" \
+      -backend-config="password=$GITLAB_ACCESS_TOKEN" \
+      -backend-config="lock_method=POST" \
+      -backend-config="unlock_method=DELETE" \
+      -backend-config="retry_wait_min=5"
+    - terraform destroy --auto-approve \
+      -var="public_image_repo=$DOCKER_IMAGE_BACKEND" \
+      -var="docker_image_tag=latest" \
+      -var="db_password=$DB_PASSWORD" \
+      -var="CONTAINER_TOKEN=$CONTAINER_TOKEN" \
+      -var="CONTAINER_USERNAME=$CONTAINER_USERNAME" \
+      -var="CI_REGISTRY=$CI_REGISTRY"
+  when: manual
   only:
     - main
